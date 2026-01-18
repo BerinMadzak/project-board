@@ -4,6 +4,7 @@
   "description": "Full-stack project board web application built with React, Node.js, and PostgreSQL.",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently -n client,server -c blue,green \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\""
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/BerinMadzak/project-board#readme",
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "eslint": "^9.39.2",
     "eslint-config-xo": "^0.49.0",
     "eslint-plugin-prettier": "^5.5.5",
