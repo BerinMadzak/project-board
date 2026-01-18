@@ -1,0 +1,28 @@
+{
+  "name": "project-board",
+  "version": "1.0.0",
+  "description": "Full-stack project board web application built with React, Node.js, and PostgreSQL.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BerinMadzak/project-board.git"
+  },
+  "author": "Berin Madžak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BerinMadzak/project-board/issues"
+  },
+  "homepage": "https://github.com/BerinMadzak/project-board#readme",
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "eslint-config-xo": "^0.49.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "3.8.0",
+    "typescript-eslint": "^8.53.0"
+  }
+}
