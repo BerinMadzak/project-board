@@ -48,25 +48,24 @@ authRouter.post(
 authRouter.post(
   "/login",
   [
-    body("email")
-      .isEmail()
-      .withMessage("Email is not valid"),
-    body("password")
-      .isEmpty()
-      .withMessage("Password is required"),
+    body("email").isEmail().withMessage("Email is not valid"),
+    body("password").isEmpty().withMessage("Password is required"),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const { email, password } = req.body;
-        const user = await prisma.user.findUnique({ where: { email } });
-        
-        if(!user || !(await bcrypt.compare(password, user.passwordHash))) {
-            return res.status(401).json({ message: "Invalid credentials" });
-        } else {
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
-            return res.status(200).json({ token });
-        }
+      const { email, password } = req.body;
+      const user = await prisma.user.findUnique({ where: { email } });
+
+      if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      } else {
+        const token = jwt.sign(
+          { id: user.id },
+          process.env.JWT_SECRET as string,
+        );
+        return res.status(200).json({ token });
+      }
     }
 
     return res.status(400).json({ errors: errors.array() });

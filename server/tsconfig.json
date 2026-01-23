@@ -12,6 +12,10 @@
     // For nodejs:
     "lib": ["esnext"],
     "types": ["node"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
     // and npm install -D @types/node
 
     // Other Outputs
@@ -46,5 +50,6 @@
     "noImplicitAny": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules", "build"],
+  "files": ["src/types/express.d.ts"]
 }
