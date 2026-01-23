@@ -43,7 +43,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "noImplicitAny": true,
+    "noImplicitAny": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "build"]
