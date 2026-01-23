@@ -23,9 +23,16 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response.status == 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
+    if (error.response?.status === 401) {
+      const currentPath = window.location.pathname;
+      const isAuthPage = currentPath === '/login' || currentPath === '/register';
+      const hadToken = localStorage.getItem("token");
+      
+      if (!isAuthPage && hadToken) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   },

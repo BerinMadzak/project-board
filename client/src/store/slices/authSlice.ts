@@ -43,66 +43,6 @@ const loadInitialState = (): AuthState => {
   };
 };
 
-const authSlice = createSlice({
-  name: "auth",
-  initialState: loadInitialState(),
-  reducers: {
-    setCredentials: (state, action) => {
-      const { user, token } = action.payload;
-      state.user = user;
-      state.token = token;
-      state.isAuthenticated = true;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-    },
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
-      state.isAuthenticated = false;
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(login.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-    }),
-    builder.addCase(login.fulfilled, (state, action) => {
-        const { user, token } = action.payload;
-        state.user = user;
-        state.token = token;
-        state.isAuthenticated = true;
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-    }),
-        builder.addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-    }),
-        builder.addCase(register.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-    }),
-    builder.addCase(register.fulfilled, (state, action) => {
-        const { user, token } = action.payload;
-        state.user = user;
-        state.token = token;
-        state.isAuthenticated = true;
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-    }),
-    builder.addCase(register.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-    });
-  },
-});
-
 export const login = createAsyncThunk(
   "/auth/login",
   async (
@@ -148,6 +88,72 @@ export const register = createAsyncThunk(
     }
   },
 );
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: loadInitialState(),
+  reducers: {
+    setCredentials: (state, action) => {
+      const { user, token } = action.payload;
+      state.user = user;
+      state.token = token;
+      state.isAuthenticated = true;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+    },
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+    .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+    })
+    .addCase(login.fulfilled, (state, action) => {
+        const { user, token } = action.payload;
+        state.user = user;
+        state.token = token;
+        state.isAuthenticated = true;
+        state.loading = false;
+        state.error = null;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+    })
+    .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+    })
+    .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+    })
+    .addCase(register.fulfilled, (state, action) => {
+        const { user, token } = action.payload;
+        state.user = user;
+        state.token = token;
+        state.isAuthenticated = true;
+        state.loading = false;
+        state.error = null;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+    })
+    .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+    });
+  },
+});
+
 
 export const { setCredentials, logout } = authSlice.actions;
 export default authSlice.reducer;
