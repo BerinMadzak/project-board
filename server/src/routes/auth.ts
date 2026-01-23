@@ -17,28 +17,41 @@ authRouter.post(
         const emailExists = await prisma.user.findUnique({
           where: { email: value },
         });
-        return emailExists;
+        if (emailExists) {
+          throw new Error("Email is already in use");
+        }
+        return true;
       })
       .withMessage("Email is already in use"),
     body("password")
       .isString()
       .isLength({ min: 6 })
       .withMessage("Password must be at least 6 characters long"),
-    body("name").isString().isEmpty().withMessage("Name is required"),
+    body("name").isString().notEmpty().withMessage("Name is required"),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const passwordHash = await bcrypt.hash(req.body.password, 10);
-      await prisma.user.create({
-        data: {
-          email: req.body.email,
-          passwordHash: passwordHash,
-          name: req.body.name,
-          role: "MEMBER",
-        },
-      });
-      return res.status(201).json({ message: "User created successfully" });
+    if (errors.isEmpty()) {
+      try {
+        const passwordHash = await bcrypt.hash(req.body.password, 10);
+        const user = await prisma.user.create({
+          data: {
+            email: req.body.email,
+            passwordHash: passwordHash,
+            name: req.body.name,
+            role: "MEMBER",
+          },
+        });
+
+        const token = jwt.sign(
+          { id: user.id },
+          process.env.JWT_SECRET as string,
+        );
+
+        return res.status(201).json({ user, token, message: "User created successfully" });
+      } catch (error) {
+        return res.status(500).json({ message: "Error creating user" });
+      }
     }
 
     return res.status(400).json({ errors: errors.array() });
@@ -49,22 +62,28 @@ authRouter.post(
   "/login",
   [
     body("email").isEmail().withMessage("Email is not valid"),
-    body("password").isEmpty().withMessage("Password is required"),
+    body("password").notEmpty().withMessage("Password is required"),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const { email, password } = req.body;
-      const user = await prisma.user.findUnique({ where: { email } });
+    if (errors.isEmpty()) {
 
-      if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      } else {
+      try {
+        const { email, password } = req.body;
+        const user = await prisma.user.findUnique({ where: { email } });
+  
+        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+          return res.status(401).json({ message: "Invalid credentials" });
+        } 
+
         const token = jwt.sign(
           { id: user.id },
           process.env.JWT_SECRET as string,
         );
-        return res.status(200).json({ token });
+        return res.status(200).json({ user, token });
+        
+      } catch (error) {
+        return res.status(500).json({ message: "Error logging in" });
       }
     }
 
