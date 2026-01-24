@@ -14,13 +14,99 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  passwordHash String
-  username     String
-  role         Role     @default(MEMBER)
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  username      String
+  role          Role      @default(MEMBER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  ownedProjects  Project[]       @relation("ProjectOwner")
+  assignedTasks  Task[]          @relation("TaskAssignee")
+  createdTasks   Task[]          @relation("TaskCreator")
+  comments       Comment[]
+  projectMembers ProjectMember[]
+  
+  @@map("users")
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  name         String 
+  description  String?
+  color        String?  @default("#6366f1")
+  ownerId      String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  owner        User     @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  tasks        Task[]
+  members      ProjectMember[]
+
+  @@map("projects")
+}
+
+model Task {
+  id           String       @id @default(cuid())
+  title        String 
+  description  String?
+  status       TaskStatus   @default(TODO)
+  priority     TaskPriority @default(MEDIUM)
+  dueDate      DateTime?
+  projectId    String 
+  assigneeId   String?
+  createdById  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee     User?         @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdBy    User         @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  comments     Comment[]
+
+  @@map("tasks")
+}
+
+model Comment {
+  id         String    @id @default(cuid())
+  content    String 
+  taskId     String 
+  userId     String 
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  task       Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("comments")  
+}
+
+model ProjectMember {
+  id           String       @id @default(cuid())
+  projectId    String
+  userId       String
+  role         Role         @default(MEMBER)
+  joinedAt     DateTime     @default(now())
+
+  project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
 
 enum Role {
