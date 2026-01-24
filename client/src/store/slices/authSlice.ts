@@ -5,7 +5,7 @@ import axios from "axios";
 interface User {
   id: string;
   email: string;
-  name: string;
+  username: string;
   role: string;
 }
 
@@ -67,15 +67,15 @@ export const register = createAsyncThunk(
     {
       email,
       password,
-      name,
-    }: { email: string; password: string; name: string },
+      username,
+    }: { email: string; password: string; username: string },
     { rejectWithValue },
   ) => {
     try {
       const response = await api.post("/api/auth/register", {
         email,
         password,
-        name,
+        username,
       });
       return response.data;
     } catch (error: unknown) {
@@ -113,11 +113,11 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    .addCase(login.pending, (state) => {
+      .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
-    })
-    .addCase(login.fulfilled, (state, action) => {
+      })
+      .addCase(login.fulfilled, (state, action) => {
         const { user, token } = action.payload;
         state.user = user;
         state.token = token;
@@ -127,16 +127,16 @@ const authSlice = createSlice({
 
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
-    })
-    .addCase(login.rejected, (state, action) => {
+      })
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-    })
-    .addCase(register.pending, (state) => {
+      })
+      .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
-    })
-    .addCase(register.fulfilled, (state, action) => {
+      })
+      .addCase(register.fulfilled, (state, action) => {
         const { user, token } = action.payload;
         state.user = user;
         state.token = token;
@@ -146,14 +146,13 @@ const authSlice = createSlice({
 
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
-    })
-    .addCase(register.rejected, (state, action) => {
+      })
+      .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-    });
+      });
   },
 });
-
 
 export const { setCredentials, logout } = authSlice.actions;
 export default authSlice.reducer;

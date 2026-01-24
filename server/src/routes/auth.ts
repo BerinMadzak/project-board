@@ -27,7 +27,7 @@ authRouter.post(
       .isString()
       .isLength({ min: 6 })
       .withMessage("Password must be at least 6 characters long"),
-    body("name").isString().notEmpty().withMessage("Name is required"),
+    body("username").isString().notEmpty().withMessage("Username is required"),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -38,7 +38,7 @@ authRouter.post(
           data: {
             email: req.body.email,
             passwordHash: passwordHash,
-            name: req.body.name,
+            username: req.body.username,
             role: "MEMBER",
           },
         });
@@ -48,9 +48,11 @@ authRouter.post(
           process.env.JWT_SECRET as string,
         );
 
-        return res.status(201).json({ user, token, message: "User created successfully" });
+        return res
+          .status(201)
+          .json({ user, token, message: "User created successfully" });
       } catch (error) {
-        return res.status(500).json({ message: "Error creating user" });
+        return res.status(500).json({ message: "Error creating user", error });
       }
     }
 
@@ -67,23 +69,21 @@ authRouter.post(
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
-
       try {
         const { email, password } = req.body;
         const user = await prisma.user.findUnique({ where: { email } });
-  
+
         if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
           return res.status(401).json({ message: "Invalid credentials" });
-        } 
+        }
 
         const token = jwt.sign(
           { id: user.id },
           process.env.JWT_SECRET as string,
         );
         return res.status(200).json({ user, token });
-        
       } catch (error) {
-        return res.status(500).json({ message: "Error logging in" });
+        return res.status(500).json({ message: "Error logging in", error });
       }
     }
 

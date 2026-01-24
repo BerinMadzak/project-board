@@ -25,9 +25,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       const currentPath = window.location.pathname;
-      const isAuthPage = currentPath === '/login' || currentPath === '/register';
+      const isAuthPage =
+        currentPath === "/login" || currentPath === "/register";
       const hadToken = localStorage.getItem("token");
-      
+
       if (!isAuthPage && hadToken) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");

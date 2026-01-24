@@ -2,25 +2,30 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "../store/store";
-import { login } from "../store/slices/authSlice";
+import { register as registerAccount } from "../store/slices/authSlice";
 import { useEffect } from "react";
 
-interface LoginFormData {
+interface RegisterFormData {
   email: string;
+  username: string;
   password: string;
+  confirmPassword: string;
 }
 
-export default function Login() {
+export default function Register() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>();
+    watch,
+  } = useForm<RegisterFormData>();
   const { loading, error, isAuthenticated } = useSelector(
     (state: RootState) => state.auth,
   );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
+  const password = watch("password");
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,8 +33,13 @@ export default function Login() {
     }
   }, [isAuthenticated, navigate]);
 
-  const onSubmit = async (data: LoginFormData) => {
-    await dispatch(login(data));
+  const onSubmit = async (data: RegisterFormData) => {
+    const registerData = {
+      email: data.email,
+      username: data.username,
+      password: data.password,
+    };
+    await dispatch(registerAccount(registerData));
   };
 
   return (
@@ -41,7 +51,7 @@ export default function Login() {
           className="mx-auto h-50 w-auto"
         />
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
-          Sign in to your account
+          Create a new account
         </h2>
       </div>
 
@@ -80,6 +90,27 @@ export default function Login() {
           </div>
 
           <div>
+            <label
+              htmlFor="username"
+              className="block text-sm/6 font-medium text-gray-100"
+            >
+              Username
+            </label>
+            <div className="mt-2">
+              <input
+                {...register("username", { required: "Username is required" })}
+                id="username"
+                type="text"
+                placeholder="username"
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              />
+            </div>
+            {errors.username && (
+              <span className="text-red-500">{errors.username.message}</span>
+            )}
+          </div>
+
+          <div>
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
@@ -87,14 +118,6 @@ export default function Login() {
               >
                 Password
               </label>
-              <div className="text-sm">
-                <Link
-                  to="/reset-password"
-                  className="font-semibold text-indigo-500 hover:text-indigo-400"
-                >
-                  Forgot password?
-                </Link>
-              </div>
             </div>
             <div className="mt-2">
               <input
@@ -118,6 +141,37 @@ export default function Login() {
           </div>
 
           <div>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="block text-sm/6 font-medium text-gray-100"
+              >
+                Confirm Password
+              </label>
+            </div>
+            <div className="mt-2">
+              <input
+                {...register("confirmPassword", {
+                  validate: {
+                    value: (value) =>
+                      value === password || "Passwords do not match",
+                  },
+                })}
+                id="confirmPassword"
+                type="password"
+                autoComplete="current-password"
+                placeholder="••••••••"
+                className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              />
+            </div>
+            {errors.confirmPassword && (
+              <span className="text-red-500">
+                {errors.confirmPassword.message}
+              </span>
+            )}
+          </div>
+
+          <div>
             <button
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
@@ -129,12 +183,12 @@ export default function Login() {
         </form>
 
         <p className="mt-10 text-center text-sm/6 text-gray-400">
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Link
-            to="/register"
+            to="/login"
             className="font-semibold leading-6 text-indigo-400 hover:text-indigo-300"
           >
-            Register
+            Login
           </Link>
         </p>
       </div>
