@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { AppDispatch, RootState } from "../store/store";
 import { login } from "../store/slices/authSlice";
 import { useEffect } from "react";
@@ -21,12 +21,13 @@ export default function Login() {
   );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/home");
+      navigate(state?.path || "/home", { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, state]);
 
   const onSubmit = async (data: LoginFormData) => {
     await dispatch(login(data));
