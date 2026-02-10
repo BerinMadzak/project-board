@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 interface JWTPayload {
-  userId: string;
+  id: string;
   email: string;
   role: string;
 }
@@ -22,7 +22,7 @@ export const authMiddleware = (
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
 
     req.user = {
-      userId: decoded.userId,
+      userId: decoded.id,
       email: decoded.email,
       role: decoded.role,
     };
