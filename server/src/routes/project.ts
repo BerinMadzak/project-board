@@ -26,8 +26,8 @@ projectRouter.post(
     '/',
     [
         body("name").isString().notEmpty().withMessage("Name is required"),
-        body("description").optional().isString().withMessage("Description must be a string"),
-        body("color").optional().isHexColor().withMessage("Invalid color format")
+        body("description").optional({ values: 'falsy' }).isString().withMessage("Description must be a string"),
+        body("color").optional({ values: 'falsy' }).isHexColor().withMessage("Invalid color format")
     ],
     async (req: Request, res: Response) => {
         const user = req.user;
@@ -59,8 +59,8 @@ projectRouter.put(
     '/:id', 
     [
         body("name").isString().notEmpty().withMessage("Name is required"),
-        body("description").optional().isString().withMessage("Description must be a string"),
-        body("color").optional().isHexColor().withMessage("Invalid color format")
+        body("description").optional({ values: 'falsy' }).isString().withMessage("Description must be a string"),
+        body("color").optional({ values: 'falsy' }).isHexColor().withMessage("Invalid color format")
     ],
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
