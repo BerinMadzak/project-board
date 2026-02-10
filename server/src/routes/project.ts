@@ -25,7 +25,8 @@ projectRouter.get('/', async (req: Request, res: Response) => {
 projectRouter.post(
     '/',
     [
-        body("name").isString().notEmpty().withMessage("Name is required")
+        body("name").isString().notEmpty().withMessage("Name is required"),
+        body("color").optional().isHexColor().withMessage("Invalid color format")
     ],
     async (req: Request, res: Response) => {
         const user = req.user;
@@ -55,6 +56,10 @@ projectRouter.post(
 
 projectRouter.put(
     '/:id', 
+    [
+        body("name").isString().notEmpty().withMessage("Name is required"),
+        body("color").optional().isHexColor().withMessage("Invalid color format")
+    ],
     async (req: Request, res: Response) => {
         const errors = validationResult(req);
         if(errors.isEmpty()) {
