@@ -26,6 +26,7 @@ projectRouter.post(
     '/',
     [
         body("name").isString().notEmpty().withMessage("Name is required"),
+        body("description").optional().isString().withMessage("Description must be a string"),
         body("color").optional().isHexColor().withMessage("Invalid color format")
     ],
     async (req: Request, res: Response) => {
@@ -58,6 +59,7 @@ projectRouter.put(
     '/:id', 
     [
         body("name").isString().notEmpty().withMessage("Name is required"),
+        body("description").optional().isString().withMessage("Description must be a string"),
         body("color").optional().isHexColor().withMessage("Invalid color format")
     ],
     async (req: Request, res: Response) => {
