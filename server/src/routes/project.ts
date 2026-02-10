@@ -12,7 +12,7 @@ projectRouter.get('/', async (req: Request, res: Response) => {
 
     try {
         const projects = await prisma.project.findMany({
-            where: { ownerId: user!.userId },
+            where: { ownerId: user!.id },
             orderBy: { createdAt: 'desc' }
         });
 
@@ -34,13 +34,13 @@ projectRouter.post(
         if(errors.isEmpty()) {
             try {
                 const { name, description, color } = req.body;
-                console.log("Creating project with data:", { name, description, color, ownerId: user?.userId });
+                console.log("Creating project with data:", { name, description, color, ownerId: user?.id });
                 const project = await prisma.project.create({
                     data: {
                         name,
                         description,
                         color,
-                        ownerId: user!.userId
+                        ownerId: user!.id
                     }
                 });
                 return res.status(200).json(project);
@@ -61,7 +61,7 @@ projectRouter.put(
             try {
                 const { id } = req.params;
                 const { name, description, color } = req.body;
-                const userId = req.user!.userId;
+                const userId = req.user!.id;
                 const project = await prisma.project.update({
                     where: { id: id as string, ownerId: userId },
                     data: {
@@ -82,7 +82,7 @@ projectRouter.put(
 
 projectRouter.delete('/:id', async (req: Request, res: Response) => {
     const id = req.params?.id;
-    const userId = req.user!.userId;
+    const userId = req.user!.id;
 
     try {
         const deleteResult = await prisma.project.deleteMany({

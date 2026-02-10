@@ -22,7 +22,7 @@ export const authMiddleware = (
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
 
     req.user = {
-      userId: decoded.id,
+      id: decoded.id,
       email: decoded.email,
       role: decoded.role,
     };
