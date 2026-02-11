@@ -12,7 +12,10 @@ projectRouter.get("/", async (req: Request, res: Response) => {
 
   try {
     const projects = await prisma.project.findMany({
-      where: { ownerId: user!.id },
+      where: { OR: [
+        { ownerId: user!.id },
+        { members: { some: { userId: user!.id } } },
+      ]},
       orderBy: { createdAt: "desc" },
     });
 
