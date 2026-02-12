@@ -104,69 +104,6 @@ taskRouter.post(
   },
 );
 
-taskRouter.put(
-  "/:id",
-  [
-    body("title").isString().notEmpty().withMessage("Title is required"),
-    body("description")
-      .optional({ values: "falsy" })
-      .isString()
-      .withMessage("Description must be a string"),
-    body("dueDate")
-      .optional({ values: "falsy" })
-      .isISO8601()
-      .withMessage("Invalid due date format"),
-    body("status")
-      .optional()
-      .isIn(Object.values(TaskStatus))
-      .withMessage("Invalid status"),
-    body("priority")
-      .optional()
-      .isIn(Object.values(TaskPriority))
-      .withMessage("Invalid priority"),
-    body("assigneeId")
-      .optional({ values: "falsy" })
-      .isString()
-      .withMessage("assigneeId must be a string"),
-  ],
-  async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      try {
-        const { id } = req.params;
-        const { title, description, status, priority, dueDate, assigneeId } =
-          req.body;
-        const userId = req.user!.id;
-
-        const task = await prisma.task.update({
-          where: {
-            id: id as string,
-            project: {
-              OR: [
-                { ownerId: userId },
-                { members: { some: { userId: userId } } },
-              ],
-            },
-          },
-          data: {
-            title,
-            description: description || null,
-            status,
-            priority,
-            dueDate: dueDate ? new Date(dueDate) : null,
-            assigneeId: assigneeId || null,
-          },
-        });
-        return res.status(200).json(task);
-      } catch (error) {
-        return res.status(500).json({ message: "Error updating task", error });
-      }
-    }
-
-    return res.status(400).json({ errors: errors.array() });
-  },
-);
-
 taskRouter.patch(
   "/:id",
   [
