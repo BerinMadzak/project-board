@@ -36,12 +36,12 @@ export const authMiddleware = (
 export const roleMiddleware = (allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      res.sendStatus(401).json({ message: "Authentication required" });
+      res.status(401).json({ message: "Authentication required" });
       return;
     }
 
     if (!allowedRoles.includes(req.user.role)) {
-      res.sendStatus(403).json({ message: "Access denied" });
+      res.status(403).json({ message: "Access denied" });
       return;
     }
 

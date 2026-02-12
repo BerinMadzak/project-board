@@ -6,7 +6,7 @@ import {
 import api from "../../services/api";
 import axios from "axios";
 
-interface Project {
+export interface Project {
   id: string;
   name: string;
   description: string;

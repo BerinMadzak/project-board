@@ -89,6 +89,23 @@ export const register = createAsyncThunk(
   },
 );
 
+export const validate = createAsyncThunk(
+  "/auth/validate",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/api/auth/validate", {});
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || "Failed to validate token",
+        );
+      }
+      return rejectWithValue("Failed to validate token");
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: loadInitialState(),
@@ -150,6 +167,27 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(validate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(validate.fulfilled, (state, action) => {
+        const { user } = action.payload;
+        state.user = user;
+        state.isAuthenticated = true;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(validate.rejected, (state, action) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.loading = false;
+        state.error = action.payload as string;
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       });
   },
 });

@@ -1,10 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import type { AppDispatch } from "./store/store";
+import { useDispatch } from "react-redux";
+import { validate } from "./store/slices/authSlice";
 
 function App() {
   const [count, setCount] = useState(0);
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(validate());
+    }
+  }, [dispatch]);
 
   return (
     <>

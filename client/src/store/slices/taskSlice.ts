@@ -7,17 +7,17 @@ import api from "../../services/api";
 import axios from "axios";
 
 interface Task {
-    id: string;
-    title: string;
-    description: string;
-    status: string;
-    priority: string;
-    dueDate: Date | null;
-    projectId: string;
-    assigneeId: string | null;
-    createdById: string;
-    createdAt: Date;
-    updatedAt: Date;
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  dueDate: Date | null;
+  projectId: string;
+  assigneeId: string | null;
+  createdById: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface TaskState {
@@ -55,14 +55,22 @@ export const addTask = createAsyncThunk(
   "/tasks/addTask",
   async (
     {
-        title,
-        description,
-        status,
-        priority,
-        dueDate,
-        projectId,
-        assigneeId
-    }: { title: string; description: string; status: string; priority: string; dueDate: Date | null; projectId: string; assigneeId: string | null },
+      title,
+      description,
+      status,
+      priority,
+      dueDate,
+      projectId,
+      assigneeId,
+    }: {
+      title: string;
+      description: string;
+      status: string;
+      priority: string;
+      dueDate: Date | null;
+      projectId: string;
+      assigneeId: string | null;
+    },
     { rejectWithValue },
   ) => {
     try {
@@ -72,7 +80,7 @@ export const addTask = createAsyncThunk(
         status,
         priority,
         dueDate,
-        assigneeId
+        assigneeId,
       });
       return response.data;
     } catch (error: unknown) {
@@ -89,7 +97,19 @@ export const addTask = createAsyncThunk(
 export const updateTask = createAsyncThunk(
   "/tasks/updateTask",
   async (
-    {id, ...fields}: { id: string; title: string; description: string; status: string; priority: string; dueDate: Date | null; projectId: string; assigneeId: string | null },
+    {
+      id,
+      ...fields
+    }: {
+      id: string;
+      title: string;
+      description: string;
+      status: string;
+      priority: string;
+      dueDate: Date | null;
+      projectId: string;
+      assigneeId: string | null;
+    },
     { rejectWithValue },
   ) => {
     try {
@@ -133,15 +153,15 @@ const taskSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        getTasks
-        .fulfilled,
-        (state, action: PayloadAction<Task[]>) => {
-          state.tasks = action.payload;
-          state.loading = false;
-          state.error = null;
-        },
-      )
+      .addCase(getTasks.fulfilled, (state, action: PayloadAction<Task[]>) => {
+        const newTasks = action.payload;
+        const oldTasks = state.tasks.filter(
+          (task) => !newTasks.find((newTask) => newTask.id === task.id),
+        );
+        state.tasks = [...oldTasks, ...newTasks];
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(getTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
@@ -150,12 +170,9 @@ const taskSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        addTask.fulfilled,
-        (state, action: PayloadAction<Task>) => {
-          state.tasks.push(action.payload);
-        },
-      )
+      .addCase(addTask.fulfilled, (state, action: PayloadAction<Task>) => {
+        state.tasks.push(action.payload);
+      })
       .addCase(addTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
@@ -164,17 +181,14 @@ const taskSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        updateTask.fulfilled,
-        (state, action: PayloadAction<Task>) => {
-          const index = state.tasks.findIndex(
-            (task) => task.id === action.payload.id,
-          );
-          if (index !== -1) {
-            state.tasks[index] = action.payload;
-          }
-        },
-      )
+      .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
+        const index = state.tasks.findIndex(
+          (task) => task.id === action.payload.id,
+        );
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        }
+      })
       .addCase(updateTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
