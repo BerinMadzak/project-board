@@ -52,6 +52,8 @@ export default function ProjectDetails()
         setNewDueDate("");
     };
 
+    const projectTasks = tasks.filter(t => t.projectId === projectId);
+
     return (
         <div className="p-8">
             <div className="mb-6">
@@ -71,7 +73,7 @@ export default function ProjectDetails()
             {!loading && (
                 <div className="flex gap-6 overflow-x-auto pb-4">
                     {status.map(s => {
-                        const filteredTasks = tasks.filter(t => t.status === s.value);
+                        const filteredTasks = projectTasks.filter(t => t.status === s.value);
                         return (
                             <div key={s.name} className="w-72 flex-shrink-0">
                                 <div className="flex items-center justify-between mb-3">
