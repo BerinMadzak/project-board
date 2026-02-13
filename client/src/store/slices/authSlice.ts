@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../services/api";
 import axios from "axios";
 
-interface User {
+export interface User {
   id: string;
   email: string;
   username: string;

@@ -153,6 +153,7 @@ taskRouter.patch(
           data: {
             ...req.body,
             dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
+            assigneeId: req.body.assigneeId || null,
           },
         });
         return res.status(200).json(task);

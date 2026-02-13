@@ -20,6 +20,7 @@ export interface TaskForm {
   status: string;
   priority: string;
   dueDate: string;
+  assigneeId: string | null;
 }
 
 export default function ProjectDetails() {
@@ -42,6 +43,7 @@ export default function ProjectDetails() {
       status: "TODO",
       priority: "MEDIUM",
       dueDate: "",
+      assigneeId: null,
     },
   });
 
@@ -57,8 +59,7 @@ export default function ProjectDetails() {
       addTask({
         ...data,
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
-        projectId,
-        assigneeId: null,
+        projectId
       }),
     );
 
@@ -67,6 +68,7 @@ export default function ProjectDetails() {
   };
 
   const projectTasks = tasks.filter((t) => t.projectId === projectId);
+  const projectMembers = [project?.owner, ...(project?.members?.map((m) => m.user) || [])];
 
   return (
     <div className="p-8">
@@ -128,7 +130,7 @@ export default function ProjectDetails() {
                 </div>
                 <div className="rounded-lg bg-white/[0.02] p-2 space-y-2 min-h-32">
                   {filteredTasks.map((t) => (
-                    <TaskCard key={t.id} task={t} />
+                    <TaskCard key={t.id} task={t} projectMembers={projectMembers}/>
                   ))}
                 </div>
               </div>
@@ -216,6 +218,23 @@ export default function ProjectDetails() {
                   type="date"
                   className="w-full rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 [color-scheme:dark]"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">
+                  Assignee
+                </label>
+                <select
+                  {...register("assigneeId")}
+                  className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="">Unassigned</option>
+                  {projectMembers.map(m => (
+                    <option key={m?.id} value={m?.id}>
+                      {m?.username}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex gap-3 pt-2">

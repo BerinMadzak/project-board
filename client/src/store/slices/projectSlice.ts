@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import api from "../../services/api";
 import axios from "axios";
+import type { User } from "./authSlice";
 
 export interface Project {
   id: string;
@@ -12,8 +13,15 @@ export interface Project {
   description: string;
   color: string;
   ownerId: string;
+  owner: User;
   createdAt: Date;
   updatedAt: Date;
+  members: {
+    id: string;
+    userId: string;
+    projectId: string;
+    user: User;
+  }[];
 }
 
 interface ProjectState {

@@ -4,9 +4,11 @@ import type { AppDispatch } from "../store/store";
 import { useState } from "react";
 import type { TaskForm } from "../pages/ProjectDetails";
 import { useForm } from "react-hook-form";
+import type { User } from "../store/slices/authSlice";
 
 interface Props {
   task: Task;
+  projectMembers: (User | undefined)[];
 }
 
 const status = [
@@ -23,7 +25,7 @@ const priorityColors: Record<string, string> = {
   URGENT: "text-red-400",
 };
 
-export default function TaskCard({ task }: Props) {
+export default function TaskCard({ task, projectMembers }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -41,6 +43,7 @@ export default function TaskCard({ task }: Props) {
       dueDate: task.dueDate
         ? new Date(task.dueDate).toISOString().split("T")[0]
         : "",
+      assigneeId: task.assigneeId,
     },
   });
 
@@ -52,7 +55,6 @@ export default function TaskCard({ task }: Props) {
         ...data,
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
         projectId: task.projectId,
-        assigneeId: task.assigneeId,
       }),
     );
     setIsEditing(false);
@@ -72,7 +74,23 @@ export default function TaskCard({ task }: Props) {
       <div
         className={`rounded-lg border border-white/10 bg-white/5 p-3 border-t-4 border-${priorityColors[task.priority]}`}
       >
-        <p className="text-sm text-white font-medium">{task.title}</p>
+        <div className="flex justify-between">
+            <p className="text-sm text-white font-medium">{task.title}</p>
+            <div className="flex gap-2">
+                <button
+                    onClick={() => setIsEditing(true)}
+                    className="text-xs text-gray-400 hover:text-white"
+                >
+                    Edit
+                </button>
+                <button
+                    onClick={handleDelete}
+                    className="text-xs text-red-400 hover:text-red-300"
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
 
         {task.description && (
           <p className="text-xs text-gray-400 mt-1">{task.description}</p>
@@ -85,24 +103,16 @@ export default function TaskCard({ task }: Props) {
             {task.priority}
           </span>
           {dueDateString && (
-            <span className="text-xs text-gray-500">{dueDateString}</span>
+            <span>
+                <div className="text-xs text-gray-500">Due Date:</div>
+                <div className="text-xs text-gray-500">{dueDateString}</div>
+            </span>
           )}
         </div>
 
-        <div className="flex gap-2 mt-3">
-          <button
-            onClick={() => setIsEditing(true)}
-            className="text-xs text-gray-400 hover:text-white"
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDelete}
-            className="text-xs text-red-400 hover:text-red-300"
-          >
-            Delete
-          </button>
-        </div>
+        {task.assigneeId && (
+            <div className="mt-3 text-xs text-gray-400">Assigned: {projectMembers.find((m) => m?.id === task.assigneeId)?.username}</div>
+        )}
       </div>
 
       {isEditing && (
@@ -180,6 +190,23 @@ export default function TaskCard({ task }: Props) {
                   {...register("dueDate")}
                   className="w-full rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 [color-scheme:dark]"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">
+                  Assignee
+                </label>
+                <select
+                  {...register("assigneeId")}
+                  className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="">Unassigned</option>
+                  {projectMembers!.map(m => (
+                    <option key={m?.id} value={m?.id}>
+                      {m?.username}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex gap-3 pt-2">
