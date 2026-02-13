@@ -130,8 +130,8 @@ export const deleteTask = createAsyncThunk(
   "/tasks/deleteTask",
   async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
-      const response = await api.delete(`/api/tasks/${id}`);
-      return response.data;
+      await api.delete(`/api/tasks/${id}`);
+      return id;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         return rejectWithValue(
@@ -172,6 +172,8 @@ const taskSlice = createSlice({
       })
       .addCase(addTask.fulfilled, (state, action: PayloadAction<Task>) => {
         state.tasks.push(action.payload);
+        state.loading = false;
+        state.error = null;
       })
       .addCase(addTask.rejected, (state, action) => {
         state.loading = false;
@@ -188,6 +190,8 @@ const taskSlice = createSlice({
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }
+        state.loading = false;
+        state.error = null;
       })
       .addCase(updateTask.rejected, (state, action) => {
         state.loading = false;
@@ -197,14 +201,11 @@ const taskSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        deleteTask.fulfilled,
-        (state, action: PayloadAction<{ id: string }>) => {
-          state.tasks = state.tasks.filter(
-            (task) => task.id !== action.payload.id,
-          );
-        },
-      )
+      .addCase(deleteTask.fulfilled, (state, action: PayloadAction<string>) => {
+        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(deleteTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;

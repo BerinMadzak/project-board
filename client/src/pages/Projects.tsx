@@ -64,7 +64,6 @@ export default function Projects() {
     await dispatch(
       addProject({ name: name.trim(), description: description.trim(), color }),
     );
-    await dispatch(getProjects());
     setSubmitting(false);
     setModalOpen(false);
   };
@@ -156,7 +155,11 @@ export default function Projects() {
         {!loading && projects.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
             {projects.map((project) => (
-              <div key={project.id} onClick={() => navigate(`/projects/${project.id}`)} className="cursor-pointer">
+              <div
+                key={project.id}
+                onClick={() => navigate(`/projects/${project.id}`)}
+                className="cursor-pointer"
+              >
                 <ProjectCard project={project} />
               </div>
             ))}

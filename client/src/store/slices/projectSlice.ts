@@ -108,8 +108,8 @@ export const deleteProject = createAsyncThunk(
   "/projects/deleteProject",
   async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
-      const response = await api.delete(`/api/projects/${id}`);
-      return response.data;
+      await api.delete(`/api/projects/${id}`);
+      return id;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         return rejectWithValue(
@@ -151,6 +151,8 @@ const projectSlice = createSlice({
         addProject.fulfilled,
         (state, action: PayloadAction<Project>) => {
           state.projects.push(action.payload);
+          state.loading = false;
+          state.error = null;
         },
       )
       .addCase(addProject.rejected, (state, action) => {
@@ -170,6 +172,8 @@ const projectSlice = createSlice({
           if (index !== -1) {
             state.projects[index] = action.payload;
           }
+          state.loading = false;
+          state.error = null;
         },
       )
       .addCase(updateProject.rejected, (state, action) => {
@@ -182,10 +186,12 @@ const projectSlice = createSlice({
       })
       .addCase(
         deleteProject.fulfilled,
-        (state, action: PayloadAction<{ id: string }>) => {
+        (state, action: PayloadAction<string>) => {
           state.projects = state.projects.filter(
-            (project) => project.id !== action.payload.id,
+            (project) => project.id !== action.payload,
           );
+          state.loading = false;
+          state.error = null;
         },
       )
       .addCase(deleteProject.rejected, (state, action) => {

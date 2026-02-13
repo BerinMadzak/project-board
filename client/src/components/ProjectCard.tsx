@@ -7,19 +7,31 @@ import {
   type Project,
 } from "../store/slices/projectSlice";
 import { getTasks } from "../store/slices/taskSlice";
+import { useForm } from "react-hook-form";
 
 interface Props {
   project: Project;
+}
+
+interface ProjectForm {
+  name: string;
+  description: string;
+  color: string;
 }
 
 export default function ProjectCard({ project }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(project.name);
-  const [editDescription, setEditDescription] = useState(project.description);
-  const [editColor, setEditColor] = useState(project.color);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const { register, handleSubmit, reset, watch } = useForm<ProjectForm>({
+    defaultValues: {
+      name: project.name,
+      description: project.description || "",
+      color: project.color || "#6366f1",
+    },
+  });
 
   const taskCount = useSelector(
     (state: RootState) =>
@@ -44,25 +56,14 @@ export default function ProjectCard({ project }: Props) {
     setMenuOpen(false);
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await dispatch(
-      updateProject({
-        id: project.id,
-        name: editName,
-        description: editDescription,
-        color: editColor,
-      }),
-    );
+  const onSubmit = async (data: ProjectForm) => {
+    await dispatch(updateProject({ id: project.id, ...data }));
     setIsEditing(false);
   };
 
   const handleCancelEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setEditName(project.name);
-    setEditDescription(project.description);
-    setEditColor(project.color);
+    reset();
     setIsEditing(false);
   };
 
@@ -72,6 +73,8 @@ export default function ProjectCard({ project }: Props) {
   };
 
   const accentColor = project.color || "#6366f1";
+
+  const editColor = watch("color");
 
   return (
     <div className="relative group rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-200 hover:bg-white/8 cursor-pointer overflow-hidden">
@@ -83,7 +86,7 @@ export default function ProjectCard({ project }: Props) {
       <div className="p-5">
         {isEditing ? (
           <form
-            onSubmit={handleUpdate}
+            onSubmit={handleSubmit(onSubmit)}
             onClick={(e) => e.stopPropagation()}
             className="space-y-3"
           >
@@ -93,9 +96,7 @@ export default function ProjectCard({ project }: Props) {
               </label>
               <input
                 type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                required
+                {...register("name")}
                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-sm text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500"
               />
             </div>
@@ -105,8 +106,7 @@ export default function ProjectCard({ project }: Props) {
                 Description
               </label>
               <textarea
-                value={editDescription}
-                onChange={(e) => setEditDescription(e.target.value)}
+                {...register("description")}
                 rows={2}
                 className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-sm text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 resize-none"
               />
@@ -119,8 +119,7 @@ export default function ProjectCard({ project }: Props) {
               <div className="flex items-center gap-2">
                 <input
                   type="color"
-                  value={editColor}
-                  onChange={(e) => setEditColor(e.target.value)}
+                  {...register("color")}
                   className="h-8 w-10 rounded cursor-pointer bg-transparent border border-white/10"
                 />
                 <span className="text-xs text-gray-400">{editColor}</span>
