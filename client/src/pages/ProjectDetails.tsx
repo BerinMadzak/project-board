@@ -4,6 +4,7 @@ import type { AppDispatch, RootState } from "../store/store";
 import { addTask, getTasks } from "../store/slices/taskSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjects } from "../store/slices/projectSlice";
+import TaskCard from "../components/TaskCard";
 
 const status = [{ name: "To Do", value: "TODO" }, { name: "In Progress", value: "IN_PROGRESS" }, { name: "Done", value: "DONE" }];
 const priority = ["LOW", "MEDIUM", "HIGH", "URGENT"];
@@ -84,7 +85,7 @@ export default function ProjectDetails()
                                 </div>
                                  <div className="rounded-lg bg-white/[0.02] p-2 space-y-2 min-h-32">
                                     {filteredTasks.map(t => (
-                                        <p>x</p>
+                                        <TaskCard key={t.id} task={t} />
                                     ))}
                                 </div>
                             </div>
