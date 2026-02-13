@@ -6,6 +6,7 @@ import Register from "../pages/Register";
 import PrivateRoute from "../components/PrivateRoute";
 import Dashboard from "../pages/Dashboard";
 import Projects from "../pages/Projects";
+import ProjectDetails from "../pages/ProjectDetails";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Projects />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "projects/:projectId",
+        element: (
+          <PrivateRoute>
+            <ProjectDetails />
           </PrivateRoute>
         ),
       },

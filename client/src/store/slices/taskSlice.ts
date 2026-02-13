@@ -6,7 +6,7 @@ import {
 import api from "../../services/api";
 import axios from "axios";
 
-interface Task {
+export interface Task {
   id: string;
   title: string;
   description: string;

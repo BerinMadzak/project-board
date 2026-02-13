@@ -3,6 +3,7 @@ import type { AppDispatch, RootState } from "../store/store";
 import { useEffect, useState, useRef } from "react";
 import { getProjects, addProject } from "../store/slices/projectSlice";
 import ProjectCard from "../components/ProjectCard";
+import { useNavigate } from "react-router-dom";
 
 const colors = [
   "#6366f1",
@@ -27,6 +28,7 @@ export default function Projects() {
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getProjects());
@@ -154,7 +156,7 @@ export default function Projects() {
         {!loading && projects.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
             {projects.map((project) => (
-              <div key={project.id}>
+              <div key={project.id} onClick={() => navigate(`/projects/${project.id}`)} className="cursor-pointer">
                 <ProjectCard project={project} />
               </div>
             ))}
