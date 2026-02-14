@@ -183,4 +183,37 @@ projectRouter.post(
   }
 );
 
+projectRouter.delete(
+  "/:id/members/:userId",
+  async (req: Request, res: Response) => {
+    const { id, userId } = req.params;
+    const currentUserId = req.user!.id;
+
+    try {
+      const project = await prisma.project.findUnique({ where: { id: id as string } });
+      if (!project || project.ownerId !== currentUserId) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      if (userId === currentUserId) {
+        return res
+          .status(400)
+          .json({ message: "Owner cannot be removed from the project" });
+      }
+
+      const deleted = await prisma.projectMember.deleteMany({
+        where: { projectId: id as string, userId: userId as string },
+      });
+
+      if (deleted.count === 0) {
+        return res.status(404).json({ message: "Member not found" });
+      }
+
+      return res.status(200).json({ message: "Member removed successfully", userId });
+    } catch (error) {
+      return res.status(500).json({ message: "Error removing member", error });
+    }
+  }
+);
+
 export default projectRouter;

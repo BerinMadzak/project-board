@@ -148,6 +148,26 @@ export const addProjectMember = createAsyncThunk(
   }
 );
 
+export const removeProjectMember = createAsyncThunk(
+  "projects/removeProjectMember",
+  async(
+    { projectId, userId }: { projectId: string; userId: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      await api.delete(`/api/projects/${projectId}/members/${userId}`);
+      return { projectId, userId };
+    } catch (error: unknown) {
+      if(axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || "Failed to remove project member",
+        );
+      }
+      return rejectWithValue("Failed to remove project member");
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "projects",
   initialState: loadInitialState(),
@@ -230,19 +250,46 @@ const projectSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(addProjectMember.pending, (state) => {
-        state.loading = true;
+        state.loading = false;
         state.error = null;
       })
       .addCase(addProjectMember.fulfilled, (state, action) => {
-        const project = state.projects.find(p => p.id === action.payload.projectId);
-
-        if (project) {
-          if (!project.members) project.members = [];
-          const exists = project.members.some(m => m.id === action.payload.id);
-          if (!exists) project.members.push(action.payload);
+        const index = state.projects.findIndex(p => p.id === action.payload.projectId);
+        if (index !== -1) {
+          const exists = state.projects[index].members.some(m => m.id === action.payload.id);
+          if (!exists) {
+            state.projects[index] = {
+              ...state.projects[index],
+              members: [...state.projects[index].members, action.payload],
+            };
+          }
         }
+        state.loading = false;
+        state.error = null;
       })
       .addCase(addProjectMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(removeProjectMember.pending, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(removeProjectMember.fulfilled, (state, action) => {
+        const { projectId, userId } = action.payload;
+        const index = state.projects.findIndex((p) => p.id === projectId);
+        if (index !== -1) {
+          state.projects[index] = {
+            ...state.projects[index],
+            members: state.projects[index].members.filter(
+              (m) => m.userId !== userId,
+            ),
+          };
+        }
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(removeProjectMember.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
