@@ -177,21 +177,23 @@ taskRouter.delete("/:id", async (req: Request, res: Response) => {
 
   try {
     const task = await prisma.task.findFirst({
-      where: { 
-        id: id as string, 
+      where: {
+        id: id as string,
         project: {
           OR: [{ ownerId: userId }, { members: { some: { userId: userId } } }],
-        } 
+        },
       },
     });
 
-    if(!task) {
+    if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    await prisma.task.delete({ where: {id: task.id } });
+    await prisma.task.delete({ where: { id: task.id } });
 
-    getIO().to(`project:${task.projectId}`).emit("task:deleted", { id: task.id, projectId: task.projectId}); 
+    getIO()
+      .to(`project:${task.projectId}`)
+      .emit("task:deleted", { id: task.id, projectId: task.projectId });
 
     return res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {

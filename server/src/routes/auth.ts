@@ -92,13 +92,17 @@ authRouter.post(
   },
 );
 
-authRouter.post("/validate", authMiddleware, async (req: Request, res: Response) => {
-  const user = req.user;
-  if (user) {
-    return res.status(200).json({ user });
-  } else {
-    return res.status(401).json({ message: "Invalid token" });
-  }
-});
+authRouter.post(
+  "/validate",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const user = req.user;
+    if (user) {
+      return res.status(200).json({ user });
+    } else {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+  },
+);
 
 export default authRouter;

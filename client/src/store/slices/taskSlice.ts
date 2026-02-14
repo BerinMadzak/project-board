@@ -151,21 +151,45 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState: loadInitialState(),
   reducers: {
-    moveTask: (state, action: PayloadAction<{ taskId: string; status: string; overId?: string }>) => {
+    moveTask: (
+      state,
+      action: PayloadAction<{
+        taskId: string;
+        status: string;
+        overId?: string;
+      }>,
+    ) => {
       const { taskId, status: newStatus, overId } = action.payload;
-      const taskIndex = state.tasks.findIndex(t => t.id === taskId);
+      const taskIndex = state.tasks.findIndex((t) => t.id === taskId);
       if (taskIndex === -1) return;
 
       state.tasks[taskIndex].status = newStatus;
 
       if (overId && overId !== newStatus) {
-        const overIndex = state.tasks.findIndex(t => t.id === overId);
+        const overIndex = state.tasks.findIndex((t) => t.id === overId);
         if (overIndex !== -1 && taskIndex !== overIndex) {
           const [removed] = state.tasks.splice(taskIndex, 1);
           state.tasks.splice(overIndex, 0, removed);
         }
       }
-    }
+    },
+    taskCreated: (state, action: PayloadAction<Task>) => {
+      const exists = state.tasks.some((t) => t.id === action.payload.id);
+      if (!exists) {
+        state.tasks.push(action.payload);
+        state.tasks.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      }
+    },
+    taskUpdated: (state, action: PayloadAction<Task>) => {
+      const index = state.tasks.findIndex((t) => t.id === action.payload.id);
+      if (index !== -1) {
+        state.tasks[index] = action.payload;
+        state.tasks.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      }
+    },
+    taskDeleted: (state, action) => {
+      state.tasks = state.tasks.filter((t) => t.id !== action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -178,7 +202,9 @@ const taskSlice = createSlice({
         const oldTasks = state.tasks.filter(
           (task) => !newTasks.find((newTask) => newTask.id === task.id),
         );
-        state.tasks = [...oldTasks, ...newTasks];
+        state.tasks = [...oldTasks, ...newTasks].sort(
+          (a, b) => (a.order ?? 0) - (b.order ?? 0),
+        );
         state.loading = false;
         state.error = null;
       })
@@ -191,7 +217,11 @@ const taskSlice = createSlice({
         state.error = null;
       })
       .addCase(addTask.fulfilled, (state, action: PayloadAction<Task>) => {
-        state.tasks.push(action.payload);
+        const exists = state.tasks.some((t) => t.id === action.payload.id);
+        if (!exists) {
+          state.tasks.push(action.payload);
+          state.tasks.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        }
         state.loading = false;
         state.error = null;
       })
@@ -209,6 +239,7 @@ const taskSlice = createSlice({
         );
         if (index !== -1) {
           state.tasks[index] = action.payload;
+          state.tasks.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         }
         state.updatingId = null;
         state.error = null;
@@ -234,4 +265,5 @@ const taskSlice = createSlice({
 });
 
 export default taskSlice.reducer;
-export const { moveTask } = taskSlice.actions;
+export const { moveTask, taskCreated, taskUpdated, taskDeleted } =
+  taskSlice.actions;

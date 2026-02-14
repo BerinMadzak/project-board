@@ -1,47 +1,43 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import type { AppDispatch } from "./store/store";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import type { AppDispatch, RootState } from "./store/store";
+import { useDispatch, useSelector } from "react-redux";
 import { validate } from "./store/slices/authSlice";
+import { disconnectSocket, initSocket } from "./services/socket";
+import { RouterProvider } from "react-router-dom";
+import router from "./routing/router";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   const dispatch = useDispatch<AppDispatch>();
+  const token = useSelector((state: RootState) => state.auth.token);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
       dispatch(validate());
     }
   }, [dispatch]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+  useEffect(() => {
+    if (!token) {
+      disconnectSocket();
+      return;
+    }
+
+    const socket = initSocket(token);
+
+    const onConnect = () => console.log("✅ Socket connected");
+    const onError = (err: Error) => console.error("Socket error:", err.message);
+
+    socket.on("connect", onConnect);
+    socket.on("connect_error", onError);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("connect_error", onError);
+    };
+  }, [token]);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;

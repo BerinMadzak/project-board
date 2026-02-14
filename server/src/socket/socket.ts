@@ -17,14 +17,14 @@ export const initSocket = (httpServer: HttpServer) => {
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
     if (!token) return next(new Error("Authentication error"));
-    
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
 
-        socket.data.user = decoded;
-        next();
-    } catch(err) {
-        next(new Error("Authentication error"));
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+
+      socket.data.user = decoded;
+      next();
+    } catch (err) {
+      next(new Error("Authentication error", { cause: err }));
     }
   });
 
@@ -33,17 +33,17 @@ export const initSocket = (httpServer: HttpServer) => {
     console.log(`User ${user?.id} connected`);
 
     socket.on("join_project", (projectId: string) => {
-        socket.join(`project:${projectId}`);
-        console.log(`User ${user?.id} joined room project ${projectId}`);
+      socket.join(`project:${projectId}`);
+      console.log(`User ${user?.id} joined room project ${projectId}`);
     });
 
     socket.on("leave_project", (projectId: string) => {
-        socket.leave(`project:${projectId}`);
-        console.log(`User ${user?.id} left room project ${projectId}`);
+      socket.leave(`project:${projectId}`);
+      console.log(`User ${user?.id} left room project ${projectId}`);
     });
 
     socket.on("disconnect", () => {
-        console.log(`User ${user?.id} disconnected`);
+      console.log(`User ${user?.id} disconnected`);
     });
   });
 

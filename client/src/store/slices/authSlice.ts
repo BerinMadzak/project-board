@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../services/api";
 import axios from "axios";
+import { initSocket } from "../../services/socket";
 
 export interface User {
   id: string;
@@ -142,6 +143,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = null;
 
+        initSocket(token);
+
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
       })
@@ -161,6 +164,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = null;
 
+        initSocket(token);
+
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
       })
@@ -178,6 +183,11 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.loading = false;
         state.error = null;
+
+        const token = localStorage.getItem("token");
+        if (token) {
+          initSocket(token);
+        }
       })
       .addCase(validate.rejected, (state, action) => {
         state.user = null;
