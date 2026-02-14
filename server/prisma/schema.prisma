@@ -57,6 +57,7 @@ model Task {
   projectId    String 
   assigneeId   String?
   createdById  String
+  order        Float        @default(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 

@@ -6,15 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getProjects } from "../store/slices/projectSlice";
 import TaskCard from "../components/TaskCard";
 import { useForm } from "react-hook-form";
-import {
-  DndContext,
-  pointerWithin,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type DragOverEvent,
-} from "@dnd-kit/core";
+import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, type DragEndEvent, type DragOverEvent} from "@dnd-kit/core";
 import { updateTask } from "../store/slices/taskSlice";
 import { DropColumn } from "../components/DropColumn";
 
@@ -32,6 +24,7 @@ export interface TaskForm {
   priority: string;
   dueDate: string;
   assigneeId: string | null;
+  order: number | null;
 }
 
 export default function ProjectDetails() {
@@ -71,9 +64,32 @@ export default function ProjectDetails() {
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
 
+    const columnTasks = tasks
+    .filter(t => t.projectId === projectId && t.status === task.status)
+    .filter(t => t.id !== taskId); 
+
+    const taskIndex = tasks
+    .filter(t => t.projectId === projectId && t.status === task.status)
+    .findIndex(t => t.id === taskId);
+
+    const prev = columnTasks[taskIndex - 1];
+    const next = columnTasks[taskIndex];
+
+    let newOrder: number;
+    if (!prev && !next) {
+      newOrder = 1000; 
+    } else if (!prev) {
+      newOrder = (next.order as number) - 1000;  
+    } else if (!next) {
+      newOrder = (prev.order as number) + 1000; 
+    } else {
+      newOrder = ((prev.order as number) + (next.order as number)) / 2; 
+    }
+
     await dispatch(
       updateTask({
         ...task,
+        order: newOrder,
         dueDate: task.dueDate ? new Date(task.dueDate) : null,
       }),
     );

@@ -24,7 +24,7 @@ taskRouter.get("/:projectId", async (req: Request, res: Response) => {
           ],
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { order: "asc" },
     });
 
     return res.status(200).json(tasks);
@@ -132,6 +132,7 @@ taskRouter.patch(
       .optional({ values: "falsy" })
       .isString()
       .withMessage("assigneeId must be a string"),
+    body("order").optional().isFloat().withMessage("Order must be a number"),
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);

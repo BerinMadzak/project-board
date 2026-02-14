@@ -16,6 +16,7 @@ export interface Task {
   projectId: string;
   assigneeId: string | null;
   createdById: string;
+  order: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -111,6 +112,7 @@ export const updateTask = createAsyncThunk(
       dueDate: Date | null;
       projectId: string;
       assigneeId: string | null;
+      order: number | null;
     },
     { rejectWithValue },
   ) => {
@@ -149,28 +151,21 @@ const taskSlice = createSlice({
   name: "tasks",
   initialState: loadInitialState(),
   reducers: {
-    moveTask: (
-      state,
-      action: PayloadAction<{
-        taskId: string;
-        status: string;
-        overId?: string;
-      }>,
-    ) => {
+    moveTask: (state, action: PayloadAction<{ taskId: string; status: string; overId?: string }>) => {
       const { taskId, status: newStatus, overId } = action.payload;
-      const taskIndex = state.tasks.findIndex((t) => t.id === taskId);
+      const taskIndex = state.tasks.findIndex(t => t.id === taskId);
       if (taskIndex === -1) return;
 
       state.tasks[taskIndex].status = newStatus;
 
       if (overId && overId !== newStatus) {
-        const overIndex = state.tasks.findIndex((t) => t.id === overId);
+        const overIndex = state.tasks.findIndex(t => t.id === overId);
         if (overIndex !== -1 && taskIndex !== overIndex) {
           const [removed] = state.tasks.splice(taskIndex, 1);
           state.tasks.splice(overIndex, 0, removed);
         }
       }
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
