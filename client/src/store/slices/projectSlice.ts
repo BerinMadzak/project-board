@@ -1,8 +1,4 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  type PayloadAction,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import api from "../../services/api";
 import axios from "axios";
 import type { User } from "./authSlice";
@@ -129,10 +125,37 @@ export const deleteProject = createAsyncThunk(
   },
 );
 
+export const addProjectMember = createAsyncThunk(
+  "projects/addProjectMember",
+  async(
+    { projectId, email }: { projectId: string; email: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await api.post(`/api/projects/${projectId}/members/add`, {
+        email
+      });
+
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || "Failed to add project member",
+        );
+      }
+      return rejectWithValue("Failed to add project member");
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "projects",
   initialState: loadInitialState(),
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getProjects.pending, (state) => {
@@ -205,8 +228,26 @@ const projectSlice = createSlice({
       .addCase(deleteProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(addProjectMember.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addProjectMember.fulfilled, (state, action) => {
+        const project = state.projects.find(p => p.id === action.payload.projectId);
+
+        if (project) {
+          if (!project.members) project.members = [];
+          const exists = project.members.some(m => m.id === action.payload.id);
+          if (!exists) project.members.push(action.payload);
+        }
+      })
+      .addCase(addProjectMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
 export default projectSlice.reducer;
+export const { clearError } = projectSlice.actions;

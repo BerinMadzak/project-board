@@ -136,4 +136,51 @@ projectRouter.delete("/:id", async (req: Request, res: Response) => {
   }
 });
 
+projectRouter.post(
+  "/:id/members/add",
+  [
+    body('email').isEmail().withMessage("Email is not valid")
+  ],
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { email } = req.body;
+    const currentUserId = req.user!.id;
+
+    try {
+      const project = await prisma.project.findUnique({ where: { id: id as string } });
+      if(!project || project.ownerId !== currentUserId) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      const targetUser = await prisma.user.findUnique({ where: { email } });
+      if(!targetUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if(targetUser.id === currentUserId) {
+        return res.status(400).json({ message: "User is the owner of the project" });
+      }
+
+      const member = await prisma.projectMember.create({
+        data: {
+          projectId: id as string,
+          userId: targetUser.id,
+          role: "MEMBER"
+        },
+        include: {
+          user: true
+        }
+      });
+
+      return res.status(200).json(member);
+    } catch (error: any) {
+      if(error.code === "P2002") {
+        return res.status(400).json({ message: "User is already a member of the project" });
+      }
+
+      return res.status(500).json({ message: "Error adding member", error });
+    }
+  }
+);
+
 export default projectRouter;

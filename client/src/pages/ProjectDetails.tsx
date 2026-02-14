@@ -3,18 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
 import { addTask, getTasks, moveTask } from "../store/slices/taskSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { getProjects } from "../store/slices/projectSlice";
+import { addProjectMember, clearError, getProjects } from "../store/slices/projectSlice";
 import TaskCard from "../components/TaskCard";
 import { useForm } from "react-hook-form";
-import {
-  DndContext,
-  pointerWithin,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type DragOverEvent,
-} from "@dnd-kit/core";
+import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, type DragEndEvent, type DragOverEvent } from "@dnd-kit/core";
 import { updateTask } from "../store/slices/taskSlice";
 import { DropColumn } from "../components/DropColumn";
 import { useSocket } from "../hooks/useSocket";
@@ -36,6 +28,10 @@ export interface TaskForm {
   order: number | null;
 }
 
+interface AddMemberForm {
+  email: string;
+}
+
 export default function ProjectDetails() {
   const { projectId } = useParams<{ projectId: string }>();
 
@@ -47,10 +43,11 @@ export default function ProjectDetails() {
   const { tasks, loading, error } = useSelector(
     (state: RootState) => state.tasks,
   );
-  const { projects } = useSelector((state: RootState) => state.projects);
+  const { projects, error: projectError } = useSelector((state: RootState) => state.projects);
   const project = projects.find((p) => p.id === projectId);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
   const { register, handleSubmit, reset, setValue } = useForm<TaskForm>({
@@ -61,6 +58,12 @@ export default function ProjectDetails() {
       priority: "MEDIUM",
       dueDate: "",
       assigneeId: null,
+    },
+  });
+
+  const { register: addMemberRegister, handleSubmit: addMemberHandleSubmit, reset: addMemberReset } = useForm<AddMemberForm>({
+    defaultValues: {
+      email: "",
     },
   });
 
@@ -162,6 +165,17 @@ export default function ProjectDetails() {
     reset();
   };
 
+  const onAddMember = async (data: AddMemberForm) => {
+    if (!projectId) return;
+
+    try {
+      await dispatch(addProjectMember({ projectId, email: data.email })).unwrap();
+      setAddMemberModalOpen(false);
+    } catch(error) {
+      console.error(error);
+    }
+  };
+
   const projectTasks = tasks.filter((t) => t.projectId === projectId);
   const projectMembers = [
     project?.owner,
@@ -186,15 +200,27 @@ export default function ProjectDetails() {
               </p>
             )}
           </div>
-          <button
-            onClick={() => {
-              setModalOpen(true);
-              reset();
-            }}
-            className="bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-semibold px-4 py-2 rounded-md"
-          >
-            + Add Task
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                dispatch(clearError());
+                setAddMemberModalOpen(true);
+                addMemberReset();
+              }}
+              className="bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-semibold px-4 py-2 rounded-md"
+            >
+              + Add Member
+            </button>
+            <button
+              onClick={() => {
+                setModalOpen(true);
+                reset();
+              }}
+              className="bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-semibold px-4 py-2 rounded-md"
+            >
+              + Add Task
+            </button>
+          </div>
         </div>
       </div>
 
@@ -366,6 +392,53 @@ export default function ProjectDetails() {
                   {loading ? "Creating..." : "Create Task"}
                 </button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {addMemberModalOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setAddMemberModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        >
+          <div className="bg-gray-900 border border-white/10 rounded-xl w-full max-w-md p-6">
+            <h2 className="text-lg font-semibold text-white mb-4">Add Member</h2>
+
+            <form onSubmit={addMemberHandleSubmit(onAddMember)} className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">
+                  Email *
+                </label>
+                <input
+                  {...addMemberRegister("email", { required: true })}
+                  autoFocus
+                  type="email"
+                  placeholder="Enter email"
+                  className="w-full rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setAddMemberModalOpen(false)}
+                  className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300 hover:bg-white/10"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 rounded-md bg-indigo-500 hover:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                >
+                  {loading ? "Adding Member..." : "Add Member"}
+                </button>
+              </div>
+              {projectError && <p className="text-red-500">{projectError}</p>}
             </form>
           </div>
         </div>
