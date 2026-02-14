@@ -23,6 +23,7 @@ export interface Task {
 interface TaskState {
   tasks: Task[];
   loading: boolean;
+  updatingId: string | null;
   error: string | null;
 }
 
@@ -30,6 +31,7 @@ const loadInitialState = (): TaskState => {
   return {
     tasks: [],
     loading: false,
+    updatingId: null,
     error: null,
   };
 };
@@ -202,8 +204,8 @@ const taskSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(updateTask.pending, (state) => {
-        state.loading = true;
+      .addCase(updateTask.pending, (state, action) => {
+        state.updatingId = action.meta.arg.id;
         state.error = null;
       })
       .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
@@ -213,11 +215,11 @@ const taskSlice = createSlice({
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }
-        state.loading = false;
+        state.updatingId = null;
         state.error = null;
       })
       .addCase(updateTask.rejected, (state, action) => {
-        state.loading = false;
+        state.updatingId = null;
         state.error = action.payload as string;
       })
       .addCase(deleteTask.pending, (state) => {
