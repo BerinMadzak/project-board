@@ -4,6 +4,7 @@ import { body, validationResult } from "express-validator";
 import prisma from "../db/prisma-client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { authMiddleware } from "../middleware/auth-middleware";
 
 const authRouter = Router();
 
@@ -44,7 +45,7 @@ authRouter.post(
         });
 
         const token = jwt.sign(
-          { id: user.id },
+          { id: user.id, email: user.email, role: user.role },
           process.env.JWT_SECRET as string,
         );
 
@@ -78,7 +79,7 @@ authRouter.post(
         }
 
         const token = jwt.sign(
-          { id: user.id },
+          { id: user.id, email: user.email, role: user.role },
           process.env.JWT_SECRET as string,
         );
         return res.status(200).json({ user, token });
@@ -91,7 +92,7 @@ authRouter.post(
   },
 );
 
-authRouter.get("/validate", async (req: Request, res: Response) => {
+authRouter.post("/validate", authMiddleware, async (req: Request, res: Response) => {
   const user = req.user;
   if (user) {
     return res.status(200).json({ user });

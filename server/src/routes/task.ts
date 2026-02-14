@@ -3,6 +3,7 @@ import prisma from "../db/prisma-client";
 import { authMiddleware } from "../middleware/auth-middleware";
 import { body, validationResult } from "express-validator";
 import { TaskStatus, TaskPriority } from "../db/prisma-client";
+import { getIO } from "../socket/socket";
 
 const taskRouter = Router();
 
@@ -94,6 +95,8 @@ taskRouter.post(
             createdById: user!.id,
           },
         });
+        getIO().to(`project:${projectId}`).emit("task:created", task);
+
         return res.status(200).json(task);
       } catch (error) {
         return res.status(500).json({ message: "Error creating task", error });
@@ -157,6 +160,7 @@ taskRouter.patch(
             assigneeId: req.body.assigneeId || null,
           },
         });
+        getIO().to(`project:${task.projectId}`).emit("task:updated", task);
         return res.status(200).json(task);
       } catch (error) {
         return res.status(500).json({ message: "Error updating task", error });
@@ -172,18 +176,22 @@ taskRouter.delete("/:id", async (req: Request, res: Response) => {
   const userId = req.user!.id;
 
   try {
-    const deleteResult = await prisma.task.deleteMany({
-      where: {
-        id: id as string,
+    const task = await prisma.task.findFirst({
+      where: { 
+        id: id as string, 
         project: {
           OR: [{ ownerId: userId }, { members: { some: { userId: userId } } }],
-        },
+        } 
       },
     });
 
-    if (deleteResult.count === 0) {
+    if(!task) {
       return res.status(404).json({ message: "Task not found" });
     }
+
+    await prisma.task.delete({ where: {id: task.id } });
+
+    getIO().to(`project:${task.projectId}`).emit("task:deleted", { id: task.id, projectId: task.projectId}); 
 
     return res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
