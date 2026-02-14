@@ -118,7 +118,7 @@ taskRouter.patch(
       .withMessage("Description must be a string"),
     body("dueDate")
       .optional({ values: "falsy" })
-      .isDate()
+      .isISO8601()
       .withMessage("Invalid due date format"),
     body("status")
       .optional()

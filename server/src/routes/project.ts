@@ -18,9 +18,9 @@ projectRouter.get("/", async (req: Request, res: Response) => {
           { members: { some: { userId: user!.id } } },
         ],
       },
-      include: { 
+      include: {
         owner: true,
-        members: { include: { user: true } } 
+        members: { include: { user: true } },
       },
       orderBy: { createdAt: "desc" },
     });

@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
-import { addTask, getTasks } from "../store/slices/taskSlice";
+import { addTask, getTasks, moveTask } from "../store/slices/taskSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjects } from "../store/slices/projectSlice";
 import TaskCard from "../components/TaskCard";
 import { useForm } from "react-hook-form";
+import {
+  DndContext,
+  pointerWithin,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragOverEvent,
+} from "@dnd-kit/core";
+import { updateTask } from "../store/slices/taskSlice";
+import { DropColumn } from "../components/DropColumn";
 
 const status = [
   { name: "To Do", value: "TODO" },
@@ -35,6 +46,7 @@ export default function ProjectDetails() {
   const project = projects.find((p) => p.id === projectId);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const { register, handleSubmit, reset, setValue } = useForm<TaskForm>({
     defaultValues: {
@@ -47,8 +59,61 @@ export default function ProjectDetails() {
     },
   });
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active } = event;
+    const taskId = active.id as string;
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    await dispatch(
+      updateTask({
+        ...task,
+        dueDate: task.dueDate ? new Date(task.dueDate) : null,
+      }),
+    );
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const taskId = active.id as string;
+    const overId = over.id as string;
+
+    if (taskId === overId) return;
+
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    const overColumn = status.find((s) => s.value === overId);
+    if (overColumn) {
+      if (task.status !== overColumn.value) {
+        dispatch(moveTask({ taskId, status: overColumn.value }));
+      }
+      return;
+    }
+
+    const overTask = tasks.find((t) => t.id === overId);
+    if (!overTask) return;
+
+    dispatch(
+      moveTask({
+        taskId,
+        status: overTask.status,
+        overId,
+      }),
+    );
+  };
+
   useEffect(() => {
-    if (projectId) dispatch(getTasks({ projectId }));
+    if (projectId)
+      dispatch(getTasks({ projectId })).finally(() => setInitialLoad(false));
     if (projects.length === 0) dispatch(getProjects());
   }, [dispatch, projectId]);
 
@@ -59,7 +124,7 @@ export default function ProjectDetails() {
       addTask({
         ...data,
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
-        projectId
+        projectId,
       }),
     );
 
@@ -68,7 +133,10 @@ export default function ProjectDetails() {
   };
 
   const projectTasks = tasks.filter((t) => t.projectId === projectId);
-  const projectMembers = [project?.owner, ...(project?.members?.map((m) => m.user) || [])];
+  const projectMembers = [
+    project?.owner,
+    ...(project?.members?.map((m) => m.user) || []),
+  ];
 
   return (
     <div className="p-8">
@@ -103,40 +171,54 @@ export default function ProjectDetails() {
       {loading && <p className="text-gray-400 text-sm">Loading tasks...</p>}
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      {!loading && (
-        <div className="flex gap-6 overflow-x-auto pb-4">
-          {status.map((s) => {
-            const filteredTasks = projectTasks.filter(
-              (t) => t.status === s.value,
-            );
-            return (
-              <div key={s.name} className="w-72 flex-shrink-0">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold text-white">
-                    {s.name}
-                    <span className="ml-2 text-gray-400 font-normal">
-                      {filteredTasks.length}
+      {!initialLoad && (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={pointerWithin}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="flex gap-6 overflow-x-auto pb-4">
+            {status.map((s) => {
+              const filteredTasks = projectTasks.filter(
+                (t) => t.status === s.value,
+              );
+              return (
+                <div key={s.name} className="w-72 flex-shrink-0">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-semibold text-white">
+                      {s.name}
+                      <span className="ml-2 text-gray-400 font-normal">
+                        {filteredTasks.length}
+                      </span>
                     </span>
-                  </span>
-                  <button
-                    onClick={() => {
-                      setValue("status", s.value);
-                      setModalOpen(true);
-                    }}
-                    className="text-gray-400 hover:text-white text-xl"
+                    <button
+                      onClick={() => {
+                        setValue("status", s.value);
+                        setModalOpen(true);
+                      }}
+                      className="text-gray-400 hover:text-white text-xl"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <DropColumn
+                    id={s.value}
+                    items={filteredTasks.map((t) => t.id)}
                   >
-                    +
-                  </button>
+                    {filteredTasks.map((t) => (
+                      <TaskCard
+                        key={t.id}
+                        task={t}
+                        projectMembers={projectMembers}
+                      />
+                    ))}
+                  </DropColumn>
                 </div>
-                <div className="rounded-lg bg-white/[0.02] p-2 space-y-2 min-h-32">
-                  {filteredTasks.map((t) => (
-                    <TaskCard key={t.id} task={t} projectMembers={projectMembers}/>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </DndContext>
       )}
 
       {modalOpen && (
@@ -229,7 +311,7 @@ export default function ProjectDetails() {
                   className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                 >
                   <option value="">Unassigned</option>
-                  {projectMembers.map(m => (
+                  {projectMembers.map((m) => (
                     <option key={m?.id} value={m?.id}>
                       {m?.username}
                     </option>

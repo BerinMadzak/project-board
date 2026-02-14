@@ -146,7 +146,30 @@ export const deleteTask = createAsyncThunk(
 const taskSlice = createSlice({
   name: "tasks",
   initialState: loadInitialState(),
-  reducers: {},
+  reducers: {
+    moveTask: (
+      state,
+      action: PayloadAction<{
+        taskId: string;
+        status: string;
+        overId?: string;
+      }>,
+    ) => {
+      const { taskId, status: newStatus, overId } = action.payload;
+      const taskIndex = state.tasks.findIndex((t) => t.id === taskId);
+      if (taskIndex === -1) return;
+
+      state.tasks[taskIndex].status = newStatus;
+
+      if (overId && overId !== newStatus) {
+        const overIndex = state.tasks.findIndex((t) => t.id === overId);
+        if (overIndex !== -1 && taskIndex !== overIndex) {
+          const [removed] = state.tasks.splice(taskIndex, 1);
+          state.tasks.splice(overIndex, 0, removed);
+        }
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getTasks.pending, (state) => {
@@ -214,3 +237,4 @@ const taskSlice = createSlice({
 });
 
 export default taskSlice.reducer;
+export const { moveTask } = taskSlice.actions;
