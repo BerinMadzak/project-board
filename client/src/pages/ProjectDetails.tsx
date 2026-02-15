@@ -164,12 +164,17 @@ export default function ProjectDetails() {
   return (
     <div className="p-8">
       <div className="mb-6">
-        <button
-          onClick={() => navigate("/projects")}
-          className="text-sm text-gray-400 hover:text-white mb-3 block"
-        >
-          Back to Projects
-        </button>
+        <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
+          <button onClick={() => navigate("/home")} className="hover:text-white transition-colors">
+            Home
+          </button>
+          <span>/</span>
+          <button onClick={() => navigate("/projects")} className="hover:text-white transition-colors">
+            Projects
+          </button>
+          <span>/</span>
+          <span className="text-gray-400">{project?.name}</span>
+        </div>
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white">{project?.name}</h1>

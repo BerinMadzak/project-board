@@ -77,6 +77,13 @@ export default function Projects() {
       <div className="min-h-screen px-8 py-10">
         <div className="flex items-end justify-between mb-10">
           <div>
+            <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-2">
+              <button onClick={() => navigate("/home")} className="hover:text-white transition-colors">
+                Home
+              </button>
+              <span>/</span>
+              <span className="text-gray-400">Projects</span>
+            </div>
             <h1 className="text-4xl font-bold text-white">Projects</h1>
           </div>
 
