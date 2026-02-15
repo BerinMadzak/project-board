@@ -40,7 +40,7 @@ export interface TaskForm {
 export default function ProjectDetails() {
   const { projectId } = useParams<{ projectId: string }>();
 
-  if (projectId) useSocket(projectId);
+  useSocket(projectId ?? "");
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();

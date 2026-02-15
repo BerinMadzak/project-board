@@ -4,6 +4,7 @@ import authRouter from "./routes/auth";
 import projectRouter from "./routes/project";
 import taskRouter from "./routes/task";
 import analyticsRouter from "./routes/analytics";
+import { Request, Response, NextFunction } from "express";
 
 const app = express();
 
@@ -23,6 +24,11 @@ app.use("/api/analytics", analyticsRouter);
 
 app.get("/api/health", (_, res) => {
   res.status(200).send("OK");
+});
+
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Internal server error" });
 });
 
 export default app;

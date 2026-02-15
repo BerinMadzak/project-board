@@ -30,7 +30,7 @@ taskRouter.get("/:projectId", async (req: Request, res: Response) => {
 
     return res.status(200).json(tasks);
   } catch (error) {
-    return res.status(500).json({ message: "Error fetching tasks", error });
+    return res.status(500).json({ message: "Error fetching tasks" });
   }
 });
 
@@ -99,7 +99,7 @@ taskRouter.post(
 
         return res.status(200).json(task);
       } catch (error) {
-        return res.status(500).json({ message: "Error creating task", error });
+        return res.status(500).json({ message: "Error creating task" });
       }
     }
 
@@ -163,7 +163,7 @@ taskRouter.patch(
         getIO().to(`project:${task.projectId}`).emit("task:updated", task);
         return res.status(200).json(task);
       } catch (error) {
-        return res.status(500).json({ message: "Error updating task", error });
+        return res.status(500).json({ message: "Error updating task" });
       }
     }
 
@@ -197,7 +197,7 @@ taskRouter.delete("/:id", async (req: Request, res: Response) => {
 
     return res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Error deleting task", error });
+    return res.status(500).json({ message: "Error deleting task" });
   }
 });
 

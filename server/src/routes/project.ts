@@ -28,7 +28,7 @@ projectRouter.get("/", async (req: Request, res: Response) => {
 
     return res.status(200).json(projects);
   } catch (error) {
-    return res.status(500).json({ message: "Error fetching projects", error });
+    return res.status(500).json({ message: "Error fetching projects" });
   }
 });
 
@@ -52,12 +52,6 @@ projectRouter.post(
     if (errors.isEmpty()) {
       try {
         const { name, description, color } = req.body;
-        console.log("Creating project with data:", {
-          name,
-          description,
-          color,
-          ownerId: user?.id,
-        });
         const project = await prisma.project.create({
           data: {
             name,
@@ -133,7 +127,7 @@ projectRouter.delete("/:id", async (req: Request, res: Response) => {
 
     return res.status(200).json({ message: "Project deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Error deleting project", error });
+    return res.status(500).json({ message: "Error deleting project" });
   }
 });
 
@@ -186,7 +180,7 @@ projectRouter.post(
           .json({ message: "User is already a member of the project" });
       }
 
-      return res.status(500).json({ message: "Error adding member", error });
+      return res.status(500).json({ message: "Error adding member" });
     }
   },
 );
@@ -223,7 +217,7 @@ projectRouter.delete(
         .status(200)
         .json({ message: "Member removed successfully", userId });
     } catch (error) {
-      return res.status(500).json({ message: "Error removing member", error });
+      return res.status(500).json({ message: "Error removing member" });
     }
   },
 );

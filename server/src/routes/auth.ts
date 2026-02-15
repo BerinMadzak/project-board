@@ -52,6 +52,7 @@ authRouter.post(
             role: user.role,
           },
           process.env.JWT_SECRET as string,
+          { expiresIn: "7d" },
         );
 
         const userData = {
@@ -67,7 +68,7 @@ authRouter.post(
           message: "User created successfully",
         });
       } catch (error) {
-        return res.status(500).json({ message: "Error creating user", error });
+        return res.status(500).json({ message: "Error creating user" });
       }
     }
 
@@ -100,6 +101,7 @@ authRouter.post(
             role: user.role,
           },
           process.env.JWT_SECRET as string,
+          { expiresIn: "7d" },
         );
 
         const userData = {
@@ -111,7 +113,7 @@ authRouter.post(
 
         return res.status(200).json({ user: userData, token });
       } catch (error) {
-        return res.status(500).json({ message: "Error logging in", error });
+        return res.status(500).json({ message: "Error logging in" });
       }
     }
 

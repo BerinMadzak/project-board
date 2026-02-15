@@ -17,22 +17,18 @@ export const useSocket = (projectId: string) => {
     if (!socket || !projectId) return;
 
     const onTaskCreated = (task: Task) => {
-      console.log("Task created:", task.id);
       dispatch(taskCreated(task));
     };
 
     const onTaskUpdated = (task: Task) => {
-      console.log("Task updated:", task.id);
       dispatch(taskUpdated(task));
     };
 
     const onTaskDeleted = (payload: { id: string }) => {
-      console.log("Task deleted:", payload.id);
       dispatch(taskDeleted(payload.id));
     };
 
     const setupRoom = () => {
-      console.log("Joining room:", projectId);
       socket.emit("join_project", projectId);
 
       socket.on("task:created", onTaskCreated);
@@ -47,7 +43,6 @@ export const useSocket = (projectId: string) => {
     socket.on("connect", setupRoom);
 
     return () => {
-      console.log("Leaving room:", projectId);
       socket.emit("leave_project", projectId);
       socket.off("connect", setupRoom);
       socket.off("task:created", onTaskCreated);
