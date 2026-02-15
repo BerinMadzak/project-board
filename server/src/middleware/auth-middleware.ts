@@ -26,7 +26,7 @@ export const authMiddleware = (
       id: decoded.id,
       email: decoded.email,
       username: decoded.username,
-      role: decoded.role
+      role: decoded.role,
     };
 
     return next();

@@ -45,7 +45,12 @@ authRouter.post(
         });
 
         const token = jwt.sign(
-          { id: user.id, email: user.email, username: user.username, role: user.role },
+          {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            role: user.role,
+          },
           process.env.JWT_SECRET as string,
         );
 
@@ -56,9 +61,11 @@ authRouter.post(
           role: user.role,
         };
 
-        return res
-          .status(201)
-          .json({ user: userData, token, message: "User created successfully" });
+        return res.status(201).json({
+          user: userData,
+          token,
+          message: "User created successfully",
+        });
       } catch (error) {
         return res.status(500).json({ message: "Error creating user", error });
       }
@@ -86,7 +93,12 @@ authRouter.post(
         }
 
         const token = jwt.sign(
-          { id: user.id, email: user.email, username: user.username, role: user.role },
+          {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            role: user.role,
+          },
           process.env.JWT_SECRET as string,
         );
 

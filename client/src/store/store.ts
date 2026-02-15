@@ -9,8 +9,8 @@ export const store = configureStore({
     auth: authReducer,
     projects: projectReducer,
     tasks: taskReducer,
-    analytics: analyticsReducer
-  }
+    analytics: analyticsReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

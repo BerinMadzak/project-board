@@ -1,9 +1,21 @@
 import { describe, it, expect } from "vitest";
 import projectReducer, { clearError } from "../store/slices/projectSlice";
-import { getProjects, addProject, updateProject, deleteProject, addProjectMember, removeProjectMember } from "../store/slices/projectSlice";
+import {
+  getProjects,
+  addProject,
+  updateProject,
+  deleteProject,
+  addProjectMember,
+  removeProjectMember,
+} from "../store/slices/projectSlice";
 import type { Project } from "../store/slices/projectSlice";
 
-const mockUser = { id: "u1", email: "a@b.com", username: "alice", role: "MEMBER" };
+const mockUser = {
+  id: "u1",
+  email: "a@b.com",
+  username: "alice",
+  role: "MEMBER",
+};
 
 const mockProject: Project = {
   id: "p1",
@@ -14,7 +26,7 @@ const mockProject: Project = {
   owner: mockUser,
   createdAt: new Date(),
   updatedAt: new Date(),
-  members: []
+  members: [],
 };
 
 const emptyState = { projects: [], loading: false, error: null };
@@ -22,14 +34,20 @@ const loadedState = { projects: [mockProject], loading: false, error: null };
 
 describe("projectSlice — clearError", () => {
   it("clears an existing error", () => {
-    const state = projectReducer({ ...emptyState, error: "something went wrong" }, clearError());
+    const state = projectReducer(
+      { ...emptyState, error: "something went wrong" },
+      clearError(),
+    );
     expect(state.error).toBeNull();
   });
 });
 
 describe("projectSlice — getProjects", () => {
   it("sets loading true on pending", () => {
-    const state = projectReducer(emptyState, getProjects.pending("", undefined));
+    const state = projectReducer(
+      emptyState,
+      getProjects.pending("", undefined),
+    );
     expect(state.loading).toBe(true);
     expect(state.error).toBeNull();
   });
@@ -37,7 +55,7 @@ describe("projectSlice — getProjects", () => {
   it("stores projects on fulfilled", () => {
     const state = projectReducer(
       emptyState,
-      getProjects.fulfilled([mockProject], "", undefined)
+      getProjects.fulfilled([mockProject], "", undefined),
     );
     expect(state.projects).toHaveLength(1);
     expect(state.projects[0].id).toBe("p1");
@@ -47,7 +65,7 @@ describe("projectSlice — getProjects", () => {
   it("stores error message on rejected", () => {
     const state = projectReducer(
       emptyState,
-      getProjects.rejected(null, "", undefined, "Fetch failed")
+      getProjects.rejected(null, "", undefined, "Fetch failed"),
     );
     expect(state.error).toBe("Fetch failed");
     expect(state.loading).toBe(false);
@@ -59,7 +77,11 @@ describe("projectSlice — addProject", () => {
     const newProject: Project = { ...mockProject, id: "p2", name: "Beta" };
     const state = projectReducer(
       loadedState,
-      addProject.fulfilled(newProject, "", { name: "Beta", description: "", color: "" })
+      addProject.fulfilled(newProject, "", {
+        name: "Beta",
+        description: "",
+        color: "",
+      }),
     );
     expect(state.projects).toHaveLength(2);
     expect(state.projects[1].name).toBe("Beta");
@@ -68,7 +90,11 @@ describe("projectSlice — addProject", () => {
   it("does not duplicate if the same project is added twice", () => {
     const state = projectReducer(
       emptyState,
-      addProject.fulfilled(mockProject, "", { name: "Alpha", description: "", color: "" })
+      addProject.fulfilled(mockProject, "", {
+        name: "Alpha",
+        description: "",
+        color: "",
+      }),
     );
     expect(state.projects).toHaveLength(1);
   });
@@ -79,16 +105,30 @@ describe("projectSlice — updateProject", () => {
     const updated: Project = { ...mockProject, name: "Alpha Updated" };
     const state = projectReducer(
       loadedState,
-      updateProject.fulfilled(updated, "", { id: "p1", name: "Alpha Updated", description: "", color: "" })
+      updateProject.fulfilled(updated, "", {
+        id: "p1",
+        name: "Alpha Updated",
+        description: "",
+        color: "",
+      }),
     );
     expect(state.projects[0].name).toBe("Alpha Updated");
   });
 
   it("does not change the list if project id is not found", () => {
-    const unrelatedProject: Project = { ...mockProject, id: "p999", name: "Ghost" };
+    const unrelatedProject: Project = {
+      ...mockProject,
+      id: "p999",
+      name: "Ghost",
+    };
     const state = projectReducer(
       loadedState,
-      updateProject.fulfilled(unrelatedProject, "", { id: "p999", name: "Ghost", description: "", color: "" })
+      updateProject.fulfilled(unrelatedProject, "", {
+        id: "p999",
+        name: "Ghost",
+        description: "",
+        color: "",
+      }),
     );
 
     expect(state.projects).toHaveLength(1);
@@ -100,17 +140,20 @@ describe("projectSlice — deleteProject", () => {
   it("removes the project from the list on fulfilled", () => {
     const state = projectReducer(
       loadedState,
-      deleteProject.fulfilled("p1", "", { id: "p1" })
+      deleteProject.fulfilled("p1", "", { id: "p1" }),
     );
     expect(state.projects).toHaveLength(0);
   });
 
   it("leaves other projects untouched", () => {
     const secondProject: Project = { ...mockProject, id: "p2", name: "Beta" };
-    const twoProjects = { ...loadedState, projects: [mockProject, secondProject] };
+    const twoProjects = {
+      ...loadedState,
+      projects: [mockProject, secondProject],
+    };
     const state = projectReducer(
       twoProjects,
-      deleteProject.fulfilled("p1", "", { id: "p1" })
+      deleteProject.fulfilled("p1", "", { id: "p1" }),
     );
     expect(state.projects).toHaveLength(1);
     expect(state.projects[0].id).toBe("p2");
@@ -128,7 +171,10 @@ describe("projectSlice — addProjectMember", () => {
   it("appends a new member to the correct project", () => {
     const state = projectReducer(
       loadedState,
-      addProjectMember.fulfilled(newMember, "", { projectId: "p1", email: "bob@b.com" })
+      addProjectMember.fulfilled(newMember, "", {
+        projectId: "p1",
+        email: "bob@b.com",
+      }),
     );
     expect(state.projects[0].members).toHaveLength(1);
     expect(state.projects[0].members[0].userId).toBe("u2");
@@ -141,7 +187,10 @@ describe("projectSlice — addProjectMember", () => {
     };
     const state = projectReducer(
       stateWithMember,
-      addProjectMember.fulfilled(newMember, "", { projectId: "p1", email: "bob@b.com" })
+      addProjectMember.fulfilled(newMember, "", {
+        projectId: "p1",
+        email: "bob@b.com",
+      }),
     );
     expect(state.projects[0].members).toHaveLength(1);
   });
@@ -162,20 +211,30 @@ describe("projectSlice — removeProjectMember", () => {
   it("removes the member from the correct project", () => {
     const state = projectReducer(
       stateWithMember,
-      removeProjectMember.fulfilled({ projectId: "p1", userId: "u2" }, "", { projectId: "p1", userId: "u2" })
+      removeProjectMember.fulfilled({ projectId: "p1", userId: "u2" }, "", {
+        projectId: "p1",
+        userId: "u2",
+      }),
     );
     expect(state.projects[0].members).toHaveLength(0);
   });
 
   it("does not affect other projects", () => {
-    const secondProject: Project = { ...mockProject, id: "p2", members: [existingMember] };
+    const secondProject: Project = {
+      ...mockProject,
+      id: "p2",
+      members: [existingMember],
+    };
     const twoProjects = {
       ...loadedState,
       projects: [mockProject, secondProject],
     };
     const state = projectReducer(
       twoProjects,
-      removeProjectMember.fulfilled({ projectId: "p2", userId: "u2" }, "", { projectId: "p2", userId: "u2" })
+      removeProjectMember.fulfilled({ projectId: "p2", userId: "u2" }, "", {
+        projectId: "p2",
+        userId: "u2",
+      }),
     );
     expect(state.projects[0].members).toHaveLength(0);
     expect(state.projects[1].members).toHaveLength(0);

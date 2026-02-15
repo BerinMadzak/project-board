@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import prisma from "../db/prisma-client";
 import { authMiddleware } from "../middleware/auth-middleware";
 import { body, validationResult } from "express-validator";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/wasm-compiler-edge";
 
 const projectRouter = Router();
 
@@ -138,49 +139,56 @@ projectRouter.delete("/:id", async (req: Request, res: Response) => {
 
 projectRouter.post(
   "/:id/members/add",
-  [
-    body('email').isEmail().withMessage("Email is not valid")
-  ],
+  [body("email").isEmail().withMessage("Email is not valid")],
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { email } = req.body;
     const currentUserId = req.user!.id;
 
     try {
-      const project = await prisma.project.findUnique({ where: { id: id as string } });
-      if(!project || project.ownerId !== currentUserId) {
+      const project = await prisma.project.findUnique({
+        where: { id: id as string },
+      });
+      if (!project || project.ownerId !== currentUserId) {
         return res.status(403).json({ message: "Forbidden" });
       }
 
       const targetUser = await prisma.user.findUnique({ where: { email } });
-      if(!targetUser) {
+      if (!targetUser) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      if(targetUser.id === currentUserId) {
-        return res.status(400).json({ message: "User is the owner of the project" });
+      if (targetUser.id === currentUserId) {
+        return res
+          .status(400)
+          .json({ message: "User is the owner of the project" });
       }
 
       const member = await prisma.projectMember.create({
         data: {
           projectId: id as string,
           userId: targetUser.id,
-          role: "MEMBER"
+          role: "MEMBER",
         },
         include: {
-          user: true
-        }
+          user: true,
+        },
       });
 
       return res.status(200).json(member);
-    } catch (error: any) {
-      if(error.code === "P2002") {
-        return res.status(400).json({ message: "User is already a member of the project" });
+    } catch (error: unknown) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        return res
+          .status(400)
+          .json({ message: "User is already a member of the project" });
       }
 
       return res.status(500).json({ message: "Error adding member", error });
     }
-  }
+  },
 );
 
 projectRouter.delete(
@@ -190,7 +198,9 @@ projectRouter.delete(
     const currentUserId = req.user!.id;
 
     try {
-      const project = await prisma.project.findUnique({ where: { id: id as string } });
+      const project = await prisma.project.findUnique({
+        where: { id: id as string },
+      });
       if (!project || project.ownerId !== currentUserId) {
         return res.status(403).json({ message: "Forbidden" });
       }
@@ -209,11 +219,13 @@ projectRouter.delete(
         return res.status(404).json({ message: "Member not found" });
       }
 
-      return res.status(200).json({ message: "Member removed successfully", userId });
+      return res
+        .status(200)
+        .json({ message: "Member removed successfully", userId });
     } catch (error) {
       return res.status(500).json({ message: "Error removing member", error });
     }
-  }
+  },
 );
 
 export default projectRouter;

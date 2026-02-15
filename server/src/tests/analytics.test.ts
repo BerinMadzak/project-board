@@ -24,7 +24,9 @@ describe("Analytics API — GET /api/analytics/project/:projectId", () => {
   });
 
   afterAll(async () => {
-    await prisma.project.deleteMany({ where: { id: projectId } }).catch(() => {});
+    await prisma.project
+      .deleteMany({ where: { id: projectId } })
+      .catch(() => {});
     await deleteTestUser(userId);
   });
 

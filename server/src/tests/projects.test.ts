@@ -14,7 +14,9 @@ describe("Projects API", () => {
 
   afterAll(async () => {
     if (projectId) {
-      await prisma.project.deleteMany({ where: { id: projectId } }).catch(() => {});
+      await prisma.project
+        .deleteMany({ where: { id: projectId } })
+        .catch(() => {});
     }
     await deleteTestUser(userId);
   });
@@ -35,7 +37,7 @@ describe("Projects API", () => {
     expect(res.body.name).toBe("Test Project");
     expect(res.body.ownerId).toBe(userId);
 
-    projectId = res.body.id; 
+    projectId = res.body.id;
   });
 
   it("GET /api/projects — returns the created project", async () => {
@@ -64,6 +66,6 @@ describe("Projects API", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    projectId = ""; 
+    projectId = "";
   });
 });

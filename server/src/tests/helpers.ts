@@ -7,7 +7,10 @@ import { randomBytes } from "crypto";
 
 export const api = request(app);
 
-export async function createTestUser(overrides?: { email?: string; username?: string }) {
+export async function createTestUser(overrides?: {
+  email?: string;
+  username?: string;
+}) {
   const nonce = randomBytes(2).toString("hex");
   const email = overrides?.email ?? `test_${Date.now()}_${nonce}@example.com`;
   const username = overrides?.username ?? `user_${Date.now()}_${nonce}`;
@@ -22,8 +25,13 @@ export async function createTestUser(overrides?: { email?: string; username?: st
   });
 
   const token = jwt.sign(
-    { id: user.id, email: user.email, username: user.username, role: user.role },
-    process.env.JWT_SECRET as string
+    {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+    },
+    process.env.JWT_SECRET as string,
   );
 
   return { user, token };

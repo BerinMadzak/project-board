@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
-import { addProjectMember, removeProjectMember, clearError } from "../store/slices/projectSlice";
+import {
+  addProjectMember,
+  removeProjectMember,
+  clearError,
+} from "../store/slices/projectSlice";
 import { useForm } from "react-hook-form";
 
 interface Props {
@@ -77,9 +81,7 @@ export default function MemberPanel({ projectId }: Props) {
       ).unwrap();
       setAddModalOpen(false);
       reset();
-    } catch {
-
-    }
+    } catch {}
   };
 
   const handleRemove = async (userId: string) => {
@@ -87,7 +89,6 @@ export default function MemberPanel({ projectId }: Props) {
     try {
       await dispatch(removeProjectMember({ projectId, userId })).unwrap();
     } catch {
-
     } finally {
       setRemovingUserId(null);
     }
@@ -230,9 +231,7 @@ export default function MemberPanel({ projectId }: Props) {
                     {errors.email.message}
                   </p>
                 )}
-                {error && (
-                  <p className="text-xs text-red-400 mt-1">{error}</p>
-                )}
+                {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
               </div>
 
               <div className="flex gap-3 pt-1">

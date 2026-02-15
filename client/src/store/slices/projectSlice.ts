@@ -1,4 +1,8 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import api from "../../services/api";
 import axios from "axios";
 import type { User } from "./authSlice";
@@ -127,14 +131,17 @@ export const deleteProject = createAsyncThunk(
 
 export const addProjectMember = createAsyncThunk(
   "projects/addProjectMember",
-  async(
+  async (
     { projectId, email }: { projectId: string; email: string },
     { rejectWithValue },
   ) => {
     try {
-      const response = await api.post(`/api/projects/${projectId}/members/add`, {
-        email
-      });
+      const response = await api.post(
+        `/api/projects/${projectId}/members/add`,
+        {
+          email,
+        },
+      );
 
       return response.data;
     } catch (error: unknown) {
@@ -145,12 +152,12 @@ export const addProjectMember = createAsyncThunk(
       }
       return rejectWithValue("Failed to add project member");
     }
-  }
+  },
 );
 
 export const removeProjectMember = createAsyncThunk(
   "projects/removeProjectMember",
-  async(
+  async (
     { projectId, userId }: { projectId: string; userId: string },
     { rejectWithValue },
   ) => {
@@ -158,14 +165,14 @@ export const removeProjectMember = createAsyncThunk(
       await api.delete(`/api/projects/${projectId}/members/${userId}`);
       return { projectId, userId };
     } catch (error: unknown) {
-      if(axios.isAxiosError(error)) {
+      if (axios.isAxiosError(error)) {
         return rejectWithValue(
           error.response?.data?.message || "Failed to remove project member",
         );
       }
       return rejectWithValue("Failed to remove project member");
     }
-  }
+  },
 );
 
 const projectSlice = createSlice({
@@ -174,7 +181,7 @@ const projectSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -254,9 +261,13 @@ const projectSlice = createSlice({
         state.error = null;
       })
       .addCase(addProjectMember.fulfilled, (state, action) => {
-        const index = state.projects.findIndex(p => p.id === action.payload.projectId);
+        const index = state.projects.findIndex(
+          (p) => p.id === action.payload.projectId,
+        );
         if (index !== -1) {
-          const exists = state.projects[index].members.some(m => m.id === action.payload.id);
+          const exists = state.projects[index].members.some(
+            (m) => m.id === action.payload.id,
+          );
           if (!exists) {
             state.projects[index] = {
               ...state.projects[index],

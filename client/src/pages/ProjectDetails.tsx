@@ -6,7 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getProjects } from "../store/slices/projectSlice";
 import TaskCard from "../components/TaskCard";
 import { useForm } from "react-hook-form";
-import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, type DragEndEvent, type DragOverEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  pointerWithin,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragOverEvent,
+} from "@dnd-kit/core";
 import { updateTask } from "../store/slices/taskSlice";
 import { DropColumn } from "../components/DropColumn";
 import { useSocket } from "../hooks/useSocket";
@@ -165,10 +173,13 @@ export default function ProjectDetails() {
   ];
 
   const searchFilteredTasks = projectTasks.filter((t) => {
-    const matching = search === "" || t.title.toLowerCase().includes(search.toLowerCase()) 
-      || (t.description ?? "").toLowerCase().includes(search.toLowerCase()); 
+    const matching =
+      search === "" ||
+      t.title.toLowerCase().includes(search.toLowerCase()) ||
+      (t.description ?? "").toLowerCase().includes(search.toLowerCase());
 
-    const matchingPriority = priorityFilter === "" || t.priority === priorityFilter;
+    const matchingPriority =
+      priorityFilter === "" || t.priority === priorityFilter;
 
     return matching && matchingPriority;
   });
@@ -177,11 +188,17 @@ export default function ProjectDetails() {
     <div className="p-8">
       <div className="mb-6">
         <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
-          <button onClick={() => navigate("/home")} className="hover:text-white transition-colors">
+          <button
+            onClick={() => navigate("/home")}
+            className="hover:text-white transition-colors"
+          >
             Home
           </button>
           <span>/</span>
-          <button onClick={() => navigate("/projects")} className="hover:text-white transition-colors">
+          <button
+            onClick={() => navigate("/projects")}
+            className="hover:text-white transition-colors"
+          >
             Projects
           </button>
           <span>/</span>
@@ -236,7 +253,10 @@ export default function ProjectDetails() {
 
         {(search || priorityFilter) && (
           <button
-            onClick={() => { setSearch(""); setPriorityFilter(""); }}
+            onClick={() => {
+              setSearch("");
+              setPriorityFilter("");
+            }}
             className="text-xs text-gray-500 hover:text-white transition-colors"
           >
             Clear

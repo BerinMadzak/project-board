@@ -18,13 +18,16 @@ const mockUser = {
 
 describe("authSlice reducer", () => {
   it("returns the initial state when given undefined", () => {
-    const state = authReducer(undefined as any, { type: "@@INIT" });
+    const state = authReducer(undefined, { type: "@@INIT" });
     expect(state.isAuthenticated).toBe(false);
     expect(state.loading).toBe(false);
   });
 
   it("setCredentials sets user and marks authenticated", () => {
-    const state = authReducer(initialState, setCredentials({ user: mockUser, token: "abc123" }));
+    const state = authReducer(
+      initialState,
+      setCredentials({ user: mockUser, token: "abc123" }),
+    );
 
     expect(state.user).toEqual(mockUser);
     expect(state.token).toBe("abc123");

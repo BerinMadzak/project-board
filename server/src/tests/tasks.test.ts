@@ -7,7 +7,6 @@ jest.mock("../socket/socket", () => ({
 import { api, createTestUser, deleteTestUser } from "./helpers";
 import prisma from "../db/prisma-client";
 
-
 describe("Tasks API", () => {
   let token: string;
   let userId: string;
@@ -28,7 +27,9 @@ describe("Tasks API", () => {
   });
 
   afterAll(async () => {
-    await prisma.project.deleteMany({ where: { id: projectId } }).catch(() => {});
+    await prisma.project
+      .deleteMany({ where: { id: projectId } })
+      .catch(() => {});
     await deleteTestUser(userId);
   });
 
@@ -78,7 +79,7 @@ describe("Tasks API", () => {
     const res = await api
       .post(`/api/tasks/${projectId}`)
       .set("Authorization", `Bearer ${token}`)
-      .send({ status: "TODO" }); 
+      .send({ status: "TODO" });
 
     expect(res.status).toBe(400);
   });

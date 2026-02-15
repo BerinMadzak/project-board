@@ -6,23 +6,27 @@ import type { RootState } from "../store/store";
 export default function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <nav className="flex items-center justify-between px-8 py-5 border-b border-white/5">
         <span className="text-white font-semibold tracking-tight flex gap-2">
-        <img
-          alt="Project Board Logo"
-          src="logo.png"
-          className="mx-auto h-8 w-auto"
-        />
-        project-board
+          <img
+            alt="Project Board Logo"
+            src="logo.png"
+            className="mx-auto h-8 w-auto"
+          />
+          project-board
         </span>
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-gray-400">Hi, {user?.username}</span>
+              <span className="text-sm text-gray-400">
+                Hi, {user?.username}
+              </span>
               <button
                 onClick={() => navigate("/projects")}
                 className="text-sm bg-indigo-500 hover:bg-indigo-400 text-white font-medium px-4 py-1.5 rounded-md transition-colors"
@@ -62,8 +66,7 @@ export default function Home() {
         </div>
 
         <h1 className="text-5xl font-bold text-white tracking-tight max-w-xl leading-tight mb-5">
-          Get things done,{" "}
-          <span className="text-indigo-400">together</span>
+          Get things done, <span className="text-indigo-400">together</span>
         </h1>
 
         <p className="text-gray-400 text-lg max-w-md mb-10">
@@ -103,7 +106,12 @@ export default function Home() {
         )}
 
         <div className="flex flex-wrap justify-center gap-3 mt-16">
-          {["Kanban boards", "Real-time updates", "Team members", "Priority levels"].map((f) => (
+          {[
+            "Kanban boards",
+            "Real-time updates",
+            "Team members",
+            "Priority levels",
+          ].map((f) => (
             <span
               key={f}
               className="bg-white/5 border border-white/10 text-gray-400 text-sm px-4 py-1.5 rounded-full"
