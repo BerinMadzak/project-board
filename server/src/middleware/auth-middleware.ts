@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 export interface JWTPayload {
   id: string;
   email: string;
+  username: string;
   role: string;
 }
 
@@ -24,7 +25,8 @@ export const authMiddleware = (
     req.user = {
       id: decoded.id,
       email: decoded.email,
-      role: decoded.role,
+      username: decoded.username,
+      role: decoded.role
     };
 
     return next();

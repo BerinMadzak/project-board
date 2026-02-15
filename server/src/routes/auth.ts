@@ -45,7 +45,7 @@ authRouter.post(
         });
 
         const token = jwt.sign(
-          { id: user.id, email: user.email, role: user.role },
+          { id: user.id, email: user.email, username: user.username, role: user.role },
           process.env.JWT_SECRET as string,
         );
 
@@ -79,7 +79,7 @@ authRouter.post(
         }
 
         const token = jwt.sign(
-          { id: user.id, email: user.email, role: user.role },
+          { id: user.id, email: user.email, username: user.username, role: user.role },
           process.env.JWT_SECRET as string,
         );
         return res.status(200).json({ user, token });

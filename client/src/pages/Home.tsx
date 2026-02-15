@@ -15,7 +15,7 @@ export default function Home() {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-gray-400">Hi, {user?.email}</span>
+              <span className="text-sm text-gray-400">Hi, {user?.username}</span>
               <button
                 onClick={() => navigate("/projects")}
                 className="text-sm bg-indigo-500 hover:bg-indigo-400 text-white font-medium px-4 py-1.5 rounded-md transition-colors"
