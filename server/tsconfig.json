@@ -49,7 +49,7 @@
     "allowJs": true,
     "noImplicitAny": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/db/seed.ts"],
   "exclude": ["node_modules", "build"],
   "files": ["src/types/express.d.ts"]
 }

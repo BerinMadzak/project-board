@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "rimraf ./build && tsc",
+    "build": "tsc --outDir build --rootDir src || true && tsc",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
