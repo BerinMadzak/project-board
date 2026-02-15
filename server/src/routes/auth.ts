@@ -49,9 +49,16 @@ authRouter.post(
           process.env.JWT_SECRET as string,
         );
 
+        const userData = {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+        };
+
         return res
           .status(201)
-          .json({ user, token, message: "User created successfully" });
+          .json({ user: userData, token, message: "User created successfully" });
       } catch (error) {
         return res.status(500).json({ message: "Error creating user", error });
       }
@@ -82,7 +89,15 @@ authRouter.post(
           { id: user.id, email: user.email, username: user.username, role: user.role },
           process.env.JWT_SECRET as string,
         );
-        return res.status(200).json({ user, token });
+
+        const userData = {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+        };
+
+        return res.status(200).json({ user: userData, token });
       } catch (error) {
         return res.status(500).json({ message: "Error logging in", error });
       }

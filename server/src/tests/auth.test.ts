@@ -20,6 +20,7 @@ describe("POST /api/auth/register", () => {
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty("token");
     expect(res.body.user).toHaveProperty("email");
+    expect(res.body.user).not.toHaveProperty("passwordHash");
 
     createdUserId = res.body.user.id;
   });
