@@ -11,7 +11,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <nav className="flex items-center justify-between px-8 py-5 border-b border-white/5">
-        <span className="text-white font-semibold tracking-tight">project-board</span>
+        <span className="text-white font-semibold tracking-tight flex gap-2">
+        <img
+          alt="Project Board Logo"
+          src="logo.png"
+          className="mx-auto h-8 w-auto"
+        />
+        project-board
+        </span>
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
