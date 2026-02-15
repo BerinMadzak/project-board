@@ -1,6 +1,6 @@
 # ProjectBoard
 
-You can try the project here: https://your-app.vercel.app/ (might have to wait about a minute for the server to start)
+You can try the project here: https://project-board-woad.vercel.app/dashboard (might have to wait about a minute for the server to start)
 
 A full-hstack project management app built wit **React**, **TypeScript**, **Node.js** and **PostgreSQL**. Organise work across multiple projects using a drag-and-drop Kanban board, collaborate with teammates in real time, and track progress through an analytics dashboard.
 
@@ -30,6 +30,8 @@ A full-hstack project management app built wit **React**, **TypeScript**, **Node
 ![Screenshot3](./screenshots/screenshot3.png)
 
 ![Screenshot4](./screenshots/screenshot4.png)
+
+![Screenshot5](./screenshots/screenshot5.png)
 
 ## Setup and Installation
 
@@ -86,4 +88,19 @@ npm run dev
 ```bash
 # From client/
 npm run dev
+```
+
+### 7. Seed Demo Data (optional)
+Populates the database with two projects, realistic tasks spread across the past 14 days.
+```bash
+# From server/
+cd server
+npx ts-node src/db/seed.ts
+```
+
+Demo accounts (password: `password123`):
+```
+alice@example.com  — owns Website Redesign project
+bob@example.com    — owns Mobile App MVP project
+carol@example.com  — member on both projects
 ```
