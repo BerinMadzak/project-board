@@ -46,6 +46,9 @@ export default function ProjectDetails() {
   const [modalOpen, setModalOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
+  const [search, setSearch] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("");
+
   const { register, handleSubmit, reset, setValue } = useForm<TaskForm>({
     defaultValues: {
       title: "",
@@ -161,6 +164,15 @@ export default function ProjectDetails() {
     ...(project?.members?.map((m) => m.user) || []),
   ];
 
+  const searchFilteredTasks = projectTasks.filter((t) => {
+    const matching = search === "" || t.title.toLowerCase().includes(search.toLowerCase()) 
+      || (t.description ?? "").toLowerCase().includes(search.toLowerCase()); 
+
+    const matchingPriority = priorityFilter === "" || t.priority === priorityFilter;
+
+    return matching && matchingPriority;
+  });
+
   return (
     <div className="p-8">
       <div className="mb-6">
@@ -201,6 +213,37 @@ export default function ProjectDetails() {
       {loading && <p className="text-gray-400 text-sm">Loading tasks...</p>}
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
+      <div className="flex items-center gap-3 mb-5">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search tasks..."
+          className="w-60 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-indigo-500"
+        />
+
+        <select
+          value={priorityFilter}
+          onChange={(e) => setPriorityFilter(e.target.value)}
+          className="rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+        >
+          <option value="">All priorities</option>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+          <option value="URGENT">Urgent</option>
+        </select>
+
+        {(search || priorityFilter) && (
+          <button
+            onClick={() => { setSearch(""); setPriorityFilter(""); }}
+            className="text-xs text-gray-500 hover:text-white transition-colors"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
       {!initialLoad && (
         <DndContext
           sensors={sensors}
@@ -210,7 +253,7 @@ export default function ProjectDetails() {
         >
           <div className="flex gap-6 overflow-x-auto pb-4">
             {status.map((s) => {
-              const filteredTasks = projectTasks.filter(
+              const filteredTasks = searchFilteredTasks.filter(
                 (t) => t.status === s.value,
               );
               return (
