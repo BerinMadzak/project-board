@@ -88,14 +88,14 @@ export default function Login() {
               >
                 Password
               </label>
-              <div className="text-sm">
+              {/* <div className="text-sm">
                 <Link
                   to="/reset-password"
                   className="font-semibold text-indigo-500 hover:text-indigo-400"
                 >
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
             </div>
             <div className="mt-2">
               <input
