@@ -1,6 +1,6 @@
 # ProjectBoard
 
-You can try the project here: https://project-board-woad.vercel.app/dashboard (might have to wait about a minute for the server to start)
+You can try the project here: https://project-board-woad.vercel.app (might have to wait about a minute for the server to start)
 
 A full-hstack project management app built wit **React**, **TypeScript**, **Node.js** and **PostgreSQL**. Organise work across multiple projects using a drag-and-drop Kanban board, collaborate with teammates in real time, and track progress through an analytics dashboard.
 
