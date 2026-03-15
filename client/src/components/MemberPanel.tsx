@@ -111,7 +111,7 @@ export default function MemberPanel({ projectId }: Props) {
                 reset();
                 setAddModalOpen(true);
               }}
-              className="text-xs bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-3 py-1.5 rounded-md transition-colors"
+              className="text-xs bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-3 py-1.5 rounded-md transition-colors cursor-pointer"
             >
               + Add Member
             </button>
@@ -146,7 +146,7 @@ export default function MemberPanel({ projectId }: Props) {
                   onClick={() => handleRemove(member.memberId)}
                   disabled={removingUserId === member.memberId}
                   title={`Remove ${member.username}`}
-                  className="ml-1 w-5 h-5 flex items-center justify-center rounded-full text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50"
+                  className="ml-1 w-5 h-5 flex items-center justify-center rounded-full text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 cursor-pointer"
                 >
                   {removingUserId === member.memberId ? (
                     <svg
@@ -238,14 +238,14 @@ export default function MemberPanel({ projectId }: Props) {
                 <button
                   type="button"
                   onClick={() => setAddModalOpen(false)}
-                  className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300 hover:bg-white/10 transition-colors"
+                  className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300 hover:bg-white/10 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 rounded-md bg-indigo-500 hover:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 transition-colors"
+                  className="flex-1 rounded-md bg-indigo-500 hover:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   {loading ? "Adding…" : "Add Member"}
                 </button>

@@ -190,14 +190,14 @@ export default function ProjectDetails() {
         <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
           <button
             onClick={() => navigate("/home")}
-            className="hover:text-white transition-colors"
+            className="hover:text-white transition-colors cursor-pointer"
           >
             Home
           </button>
           <span>/</span>
           <button
             onClick={() => navigate("/projects")}
-            className="hover:text-white transition-colors"
+            className="hover:text-white transition-colors cursor-pointer"
           >
             Projects
           </button>
@@ -218,7 +218,7 @@ export default function ProjectDetails() {
               setModalOpen(true);
               reset();
             }}
-            className="bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-semibold px-4 py-2 rounded-md"
+            className="bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-semibold px-4 py-2 rounded-md cursor-pointer"
           >
             + Add Task
           </button>
@@ -242,7 +242,7 @@ export default function ProjectDetails() {
         <select
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value)}
-          className="rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+          className="rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
         >
           <option value="">All priorities</option>
           <option value="LOW">Low</option>
@@ -257,7 +257,7 @@ export default function ProjectDetails() {
               setSearch("");
               setPriorityFilter("");
             }}
-            className="text-xs text-gray-500 hover:text-white transition-colors"
+            className="text-xs text-gray-500 hover:text-white transition-colors cursor-pointer"
           >
             Clear
           </button>
@@ -290,7 +290,7 @@ export default function ProjectDetails() {
                         setValue("status", s.value);
                         setModalOpen(true);
                       }}
-                      className="text-gray-400 hover:text-white text-xl"
+                      className="text-gray-400 hover:text-white text-xl cursor-pointer"
                     >
                       +
                     </button>
@@ -357,7 +357,7 @@ export default function ProjectDetails() {
                   </label>
                   <select
                     {...register("status")}
-                    className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
                   >
                     {status.map((s) => (
                       <option key={s.value} value={s.value}>
@@ -373,7 +373,7 @@ export default function ProjectDetails() {
                   </label>
                   <select
                     {...register("priority")}
-                    className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
                   >
                     {priority.map((p) => (
                       <option key={p} value={p}>
@@ -391,7 +391,7 @@ export default function ProjectDetails() {
                 <input
                   {...register("dueDate")}
                   type="date"
-                  className="w-full rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 [color-scheme:dark]"
+                  className="w-full rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 [color-scheme:dark] cursor-pointer"
                 />
               </div>
 
@@ -401,7 +401,7 @@ export default function ProjectDetails() {
                 </label>
                 <select
                   {...register("assigneeId")}
-                  className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full rounded-md bg-gray-800 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 cursor-pointer"
                 >
                   <option value="">Unassigned</option>
                   {projectMembers.map((m) => (
@@ -416,7 +416,7 @@ export default function ProjectDetails() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300 hover:bg-white/10"
+                  className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300 hover:bg-white/10 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -424,7 +424,7 @@ export default function ProjectDetails() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 rounded-md bg-indigo-500 hover:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                  className="flex-1 rounded-md bg-indigo-500 hover:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Creating..." : "Create Task"}
                 </button>

@@ -129,14 +129,14 @@ export default function ProjectCard({ project }: Props) {
             <div className="flex gap-2 pt-1">
               <button
                 type="submit"
-                className="flex-1 rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400 transition-colors"
+                className="flex-1 rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400 transition-colors cursor-pointer"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={handleCancelEdit}
-                className="flex-1 rounded-md bg-white/5 px-3 py-1.5 text-sm font-semibold text-gray-300 hover:bg-white/10 transition-colors border border-white/10"
+                className="flex-1 rounded-md bg-white/5 px-3 py-1.5 text-sm font-semibold text-gray-300 hover:bg-white/10 transition-colors border border-white/10 cursor-pointer"
               >
                 Cancel
               </button>
@@ -158,7 +158,7 @@ export default function ProjectCard({ project }: Props) {
               <div className="relative flex-shrink-0">
                 <button
                   onClick={toggleMenu}
-                  className="p-1 rounded-md text-gray-400 hover:text-white hover:bg-white/10 transition-colors opacity-0 group-hover:opacity-100"
+                  className="p-1 rounded-md text-gray-400 hover:text-white hover:bg-white/10 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                   aria-label="Project options"
                 >
                   <svg
@@ -182,7 +182,7 @@ export default function ProjectCard({ project }: Props) {
                     <div className="absolute right-0 top-7 z-20 w-36 rounded-md bg-gray-900 border border-white/10 shadow-xl overflow-hidden">
                       <button
                         onClick={handleEdit}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
+                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
                       >
                         <svg
                           className="h-4 w-4"
@@ -196,7 +196,7 @@ export default function ProjectCard({ project }: Props) {
                       <button
                         onClick={handleDelete}
                         disabled={isDeleting}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors cursor-pointer"
                       >
                         <svg
                           className="h-4 w-4"

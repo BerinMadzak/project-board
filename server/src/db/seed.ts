@@ -93,7 +93,7 @@ async function main() {
   function makeTask(
     projectId: string,
     createdById: string,
-    t: Omit<Prisma.TaskUncheckedCreateInput, "projectId" | "createdById">
+    t: Omit<Prisma.TaskUncheckedCreateInput, "projectId" | "createdById">,
   ): Prisma.TaskUncheckedCreateInput {
     return { ...t, projectId, createdById };
   }
@@ -333,7 +333,8 @@ async function main() {
     },
     {
       title: "SEO audit and meta tag review",
-      description: "Ensure all pages have proper meta descriptions and OG tags.",
+      description:
+        "Ensure all pages have proper meta descriptions and OG tags.",
       status: "TODO",
       priority: "URGENT",
       dueDate: daysAgo(2),
@@ -468,7 +469,8 @@ async function main() {
           createdAt: daysAgo(11),
         },
         {
-          content: "Agreed – the notes from the sales team were especially helpful.",
+          content:
+            "Agreed – the notes from the sales team were especially helpful.",
           taskId: firstWebTask.id,
           userId: alice.id,
           createdAt: daysAgo(11),

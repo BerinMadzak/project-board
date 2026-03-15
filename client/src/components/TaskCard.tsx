@@ -126,7 +126,7 @@ export default function TaskCard({ task, projectMembers }: Props) {
                 e.stopPropagation();
                 setIsEditing(true);
               }}
-              className="text-xs text-gray-400 hover:text-white transition-colors"
+              className="text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
             >
               Edit
             </button>
@@ -135,7 +135,7 @@ export default function TaskCard({ task, projectMembers }: Props) {
                 e.stopPropagation();
                 dispatch(deleteTask({ id: task.id }));
               }}
-              className="text-xs text-red-500 hover:text-red-400 transition-colors"
+              className="text-xs text-red-500 hover:text-red-400 transition-colors cursor-pointer"
             >
               Delete
             </button>
@@ -281,14 +281,14 @@ export default function TaskCard({ task, projectMembers }: Props) {
                       reset();
                     }}
                     disabled={isSaving}
-                    className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300 hover:bg-white/10"
+                    className="flex-1 rounded-md bg-white/5 border border-white/10 px-3 py-2 text-sm text-gray-300 hover:bg-white/10 cursor-pointer disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="flex-1 rounded-md bg-indigo-500 hover:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                    className="flex-1 rounded-md bg-indigo-500 hover:bg-indigo-400 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 cursor-pointer"
                   >
                     {isSaving ? "Saving..." : "Save"}
                   </button>

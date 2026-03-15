@@ -80,7 +80,7 @@ export default function Projects() {
             <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-2">
               <button
                 onClick={() => navigate("/home")}
-                className="hover:text-white transition-colors"
+                className="hover:text-white transition-colors cursor-pointer"
               >
                 Home
               </button>
@@ -92,7 +92,7 @@ export default function Projects() {
 
           <button
             onClick={openModal}
-            className="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400"
+            className="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 cursor-pointer"
           >
             + New Project
           </button>
@@ -155,7 +155,7 @@ export default function Projects() {
             </p>
             <button
               onClick={openModal}
-              className="flex items-center gap-2 rounded-lg bg-indigo-500/20 border border-indigo-500/30 px-4 py-2 text-sm font-medium text-indigo-300 hover:bg-indigo-500/30"
+              className="flex items-center gap-2 rounded-lg bg-indigo-500/20 border border-indigo-500/30 px-4 py-2 text-sm font-medium text-indigo-300 hover:bg-indigo-500/30 cursor-pointer"
             >
               + Create a project
             </button>
@@ -192,7 +192,7 @@ export default function Projects() {
               <button
                 onClick={closeModal}
                 disabled={submitting}
-                className="p-1.5 rounded-md text-gray-500 hover:text-white hover:bg-white/10"
+                className="p-1.5 rounded-md text-gray-500 hover:text-white hover:bg-white/10 cursor-pointer"
               >
                 <svg
                   className="h-4 w-4"
@@ -255,7 +255,7 @@ export default function Projects() {
                       key={c}
                       type="button"
                       onClick={() => setColor(c)}
-                      className="h-7 w-7 rounded-full border-2 transition-all duration-150 hover:scale-110 active:scale-95"
+                      className="h-7 w-7 rounded-full border-2 transition-all duration-150 hover:scale-110 active:scale-95 cursor-pointer"
                       style={{
                         backgroundColor: c,
                         borderColor: color === c ? "white" : "transparent",
@@ -305,14 +305,14 @@ export default function Projects() {
                   type="button"
                   onClick={closeModal}
                   disabled={submitting}
-                  className="flex-1 rounded-md bg-white/5 px-3 py-2 text-sm font-semibold text-gray-300 hover:bg-white/10 border border-white/10 transition-colors disabled:opacity-50"
+                  className="flex-1 rounded-md bg-white/5 px-3 py-2 text-sm font-semibold text-gray-300 hover:bg-white/10 border border-white/10 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-400 transition-colors disabled:opacity-60 shadow-lg shadow-indigo-500/20"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-400 transition-colors disabled:opacity-60 shadow-lg shadow-indigo-500/20 cursor-pointer"
                 >
                   {submitting ? (
                     <>

@@ -29,13 +29,13 @@ export default function Home() {
               </span>
               <button
                 onClick={() => navigate("/projects")}
-                className="text-sm bg-indigo-500 hover:bg-indigo-400 text-white font-medium px-4 py-1.5 rounded-md transition-colors"
+                className="text-sm bg-indigo-500 hover:bg-indigo-400 text-white font-medium px-4 py-1.5 rounded-md transition-colors cursor-pointer"
               >
                 My Projects
               </button>
               <button
                 onClick={() => dispatch(logout())}
-                className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors"
+                className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
               >
                 Log out
               </button>
@@ -44,13 +44,13 @@ export default function Home() {
             <>
               <button
                 onClick={() => navigate("/login")}
-                className="text-sm text-gray-400 hover:text-white transition-colors"
+                className="text-sm text-gray-400 hover:text-white transition-colors cursor-pointer"
               >
                 Log in
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="text-sm bg-indigo-500 hover:bg-indigo-400 text-white font-medium px-4 py-1.5 rounded-md transition-colors"
+                className="text-sm bg-indigo-500 hover:bg-indigo-400 text-white font-medium px-4 py-1.5 rounded-md transition-colors cursor-pointer"
               >
                 Get started
               </button>
@@ -77,13 +77,13 @@ export default function Home() {
           <div className="flex gap-3">
             <button
               onClick={() => navigate("/projects")}
-              className="bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
+              className="bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors cursor-pointer"
             >
               Go to Projects
             </button>
             <button
               onClick={() => navigate("/dashboard")}
-              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
+              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors cursor-pointer"
             >
               Dashboard
             </button>
@@ -92,13 +92,13 @@ export default function Home() {
           <div className="flex gap-3">
             <button
               onClick={() => navigate("/register")}
-              className="bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
+              className="bg-indigo-500 hover:bg-indigo-400 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors cursor-pointer"
             >
               Get started free
             </button>
             <button
               onClick={() => navigate("/login")}
-              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors"
+              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors cursor-pointer"
             >
               Log in
             </button>
