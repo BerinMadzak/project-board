@@ -53,6 +53,7 @@ export default function ProjectDetails() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [isMemberPanelOpen, setIsMemberPanelOpen] = useState(false);
 
   const [search, setSearch] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
@@ -225,7 +226,18 @@ export default function ProjectDetails() {
         </div>
       </div>
 
-      {projectId && <MemberPanel projectId={projectId} />}
+      <button 
+        onClick={() => setIsMemberPanelOpen(!isMemberPanelOpen)}
+        className={`flex w-60 items-center justify-between rounded-md px-3 py-2 text-sm text-white transition-colors duration-200 
+        cursor-pointer ${isMemberPanelOpen ? "bg-white/10 border-indigo-500" : "bg-white/5 border-white/10"} 
+        mb-5 border focus:outline-none`}
+      >      
+        <span>Team Members</span>
+        <span className={`transform transition-transform ${isMemberPanelOpen ? 'rotate-180' : 'rotate-0'}`}>
+          ▼
+        </span>
+      </button>
+      {isMemberPanelOpen && projectId && <MemberPanel projectId={projectId} />}
 
       {loading && <p className="text-gray-400 text-sm">Loading tasks...</p>}
       {error && <p className="text-red-500 text-sm">{error}</p>}
