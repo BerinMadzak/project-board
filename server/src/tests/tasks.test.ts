@@ -1,9 +1,3 @@
-jest.mock("../socket/socket", () => ({
-  getIO: () => ({
-    to: () => ({ emit: () => {} }),
-  }),
-}));
-
 import { api, clearDatabase, createTestUser } from "./helpers";
 
 describe("Tasks API", () => {
