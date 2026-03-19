@@ -93,4 +93,13 @@ describe("Analytics API — GET /api/analytics/project/:projectId", () => {
     expect(res.status).toBe(200);
     expect(res.body.stats.overdue).toBeGreaterThanOrEqual(1);
   });
+
+  it("outsider cannot access analytics for a project they are not a member of", async () => {
+    const { token: outsiderToken } = await createTestUser();
+    const res = await api
+      .get(`/api/analytics/project/${projectId}`)
+      .set("Authorization", `Bearer ${outsiderToken}`);
+
+    expect(res.status).toBe(403);
+  });
 });
