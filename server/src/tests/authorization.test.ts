@@ -122,7 +122,7 @@ describe("Authorization boundaries", () => {
         .set("Authorization", `Bearer ${outsiderToken}`)
         .send({ status: "DONE" });
 
-      expect(res.status).toBe(500);
+      expect(res.status).toBe(403);
     });
 
     it("outsider cannot delete a task", async () => {

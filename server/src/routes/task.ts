@@ -144,7 +144,7 @@ taskRouter.patch(
         const { id } = req.params;
         const userId = req.user!.id;
 
-        const task = await prisma.task.update({
+        const task = await prisma.task.findFirst({
           where: {
             id: id as string,
             project: {
@@ -153,15 +153,23 @@ taskRouter.patch(
                 { members: { some: { userId: userId } } },
               ],
             },
-          },
+          }
+        });
+
+        if(!task) {
+          return res.status(403).json({ message: "Forbidden" });
+        }
+
+        const updated = await prisma.task.update({
+          where: { id: id as string },
           data: {
             ...req.body,
             dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
             assigneeId: req.body.assigneeId || null,
           },
-        });
-        getIO().to(`project:${task.projectId}`).emit("task:updated", task);
-        return res.status(200).json(task);
+        })
+        getIO().to(`project:${task.projectId}`).emit("task:updated", updated);
+        return res.status(200).json(updated);
       } catch (error) {
         return res.status(500).json({ message: "Error updating task" });
       }
