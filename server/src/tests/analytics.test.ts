@@ -2,17 +2,16 @@ jest.mock("../socket/socket", () => ({
   getIO: () => ({ to: () => ({ emit: () => {} }) }),
 }));
 
-import { api, createTestUser, deleteTestUser } from "./helpers";
-import prisma from "../db/prisma-client";
+import { api, clearDatabase, createTestUser } from "./helpers";
 
 describe("Analytics API — GET /api/analytics/project/:projectId", () => {
   let token: string;
-  let userId: string;
   let projectId: string;
 
   beforeAll(async () => {
-    const { user, token: t } = await createTestUser();
-    userId = user.id;
+    await clearDatabase();
+
+    const { token: t } = await createTestUser();
     token = t;
 
     const projectRes = await api
@@ -21,13 +20,6 @@ describe("Analytics API — GET /api/analytics/project/:projectId", () => {
       .send({ name: "Analytics Test Project" });
 
     projectId = projectRes.body.id;
-  });
-
-  afterAll(async () => {
-    await prisma.project
-      .deleteMany({ where: { id: projectId } })
-      .catch(() => {});
-    await deleteTestUser(userId);
   });
 
   it("returns 401 without a token", async () => {

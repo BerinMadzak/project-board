@@ -1,5 +1,4 @@
-import { api, createTestUser, deleteTestUser } from "./helpers";
-import prisma from "../db/prisma-client";
+import { api, clearDatabase, createTestUser } from "./helpers";
 
 describe("Projects API", () => {
   let token: string;
@@ -7,18 +6,11 @@ describe("Projects API", () => {
   let projectId: string;
 
   beforeAll(async () => {
+    await clearDatabase();
+
     const { user, token: t } = await createTestUser();
     userId = user.id;
     token = t;
-  });
-
-  afterAll(async () => {
-    if (projectId) {
-      await prisma.project
-        .deleteMany({ where: { id: projectId } })
-        .catch(() => {});
-    }
-    await deleteTestUser(userId);
   });
 
   it("GET /api/projects — returns 401 without a token", async () => {

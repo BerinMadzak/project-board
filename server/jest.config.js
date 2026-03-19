@@ -3,4 +3,5 @@ module.exports = {
   testEnvironment: "node",
   testMatch: ["**/tests/**/*.test.ts"],
   setupFiles: ["./src/tests/setup.ts"],
+  globalTeardown: "./src/tests/teardown.ts",
 };

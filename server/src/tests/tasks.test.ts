@@ -4,18 +4,17 @@ jest.mock("../socket/socket", () => ({
   }),
 }));
 
-import { api, createTestUser, deleteTestUser } from "./helpers";
-import prisma from "../db/prisma-client";
+import { api, clearDatabase, createTestUser } from "./helpers";
 
 describe("Tasks API", () => {
   let token: string;
-  let userId: string;
   let projectId: string;
   let taskId: string;
 
   beforeAll(async () => {
-    const { user, token: t } = await createTestUser();
-    userId = user.id;
+    await clearDatabase();
+
+    const { token: t } = await createTestUser();
     token = t;
 
     const projectRes = await api
@@ -24,13 +23,6 @@ describe("Tasks API", () => {
       .send({ name: "Task Test Project" });
 
     projectId = projectRes.body.id;
-  });
-
-  afterAll(async () => {
-    await prisma.project
-      .deleteMany({ where: { id: projectId } })
-      .catch(() => {});
-    await deleteTestUser(userId);
   });
 
   it("POST /api/tasks/:projectId — creates a task", async () => {

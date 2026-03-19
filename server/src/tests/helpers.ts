@@ -40,3 +40,11 @@ export async function createTestUser(overrides?: {
 export async function deleteTestUser(userId: string) {
   await prisma.user.delete({ where: { id: userId } }).catch(() => {});
 }
+
+export async function clearDatabase() {
+  await prisma.comment.deleteMany();
+  await prisma.projectMember.deleteMany();
+  await prisma.task.deleteMany();
+  await prisma.project.deleteMany();
+  await prisma.user.deleteMany();
+}

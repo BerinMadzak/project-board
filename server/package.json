@@ -17,7 +17,7 @@
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "test": "jest --forceExit",
+    "test": "jest --forceExit --runInBand",
     "test:watch": "jest --watch --forceExit"
   },
   "author": "Berin Madžak",
@@ -35,7 +35,6 @@
     "@types/supertest": "^6.0.3",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
@@ -45,6 +44,7 @@
     "uninstall": "^0.0.0"
   },
   "devDependencies": {
+    "dotenv": "^17.3.1",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
     "rimraf": "^6.1.2",
