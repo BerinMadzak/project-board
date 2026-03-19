@@ -92,7 +92,14 @@ projectRouter.put(
         const { id } = req.params;
         const { name, description, color } = req.body;
         const userId = req.user!.id;
-        const project = await prisma.project.update({
+
+        const project = await prisma.project.findUnique({ where: { id: id as string } });
+
+        if (!project || project.ownerId !== userId) {
+          return res.status(403).json({ message: "Forbidden" });
+        }
+
+        const updated = await prisma.project.update({
           where: { id: id as string, ownerId: userId },
           data: {
             name,
@@ -100,7 +107,7 @@ projectRouter.put(
             color,
           },
         });
-        return res.status(200).json(project);
+        return res.status(200).json(updated);
       } catch (error) {
         return res
           .status(500)
