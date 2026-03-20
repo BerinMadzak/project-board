@@ -18,7 +18,8 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "test": "jest --forceExit --runInBand",
-    "test:watch": "jest --watch --forceExit"
+    "test:watch": "jest --watch --forceExit",
+    "test:coverage": "jest --forceExit --runInBand --coverage"
   },
   "author": "Berin Madžak",
   "license": "ISC",
