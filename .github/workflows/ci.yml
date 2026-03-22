@@ -73,5 +73,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --prefix ${{ matrix.workspace }}
 
+      - name: Generate Prisma client
+        if: matrix.workspace == 'server'
+        run: npm ci --prefix server && server/node_modules/.bin/prisma generate --schema server/prisma/schema.prisma
+
       - name: Run TypeScript check
         run: ${{ matrix.workspace }}/node_modules/.bin/tsc --noEmit --project ${{ matrix.workspace }}/tsconfig.json
