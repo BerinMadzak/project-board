@@ -21,7 +21,7 @@ A full-stack project management app built with **React**, **TypeScript**, **Node
 - **Frontend**: React, Vite, TypeScript, TailwindCSS, Redux Toolkit, @dnd-kit, Recharts
 - **Backend**: Node.js, Express, TypeScript, Prisma, PostgreSQL, Socket.io
 - **Testing**: Vitest + Testing Library (frontend), Jest + Supertest (backend), Playwright (E2E)
-- **Deployment**: Vercel (frontend), Render (backend + PostgreSQL)
+- **Deployment**: Vercel (frontend), Render (backend), Supabase (PostgreSQL)
 - **Version Control**: Git, GitHub
 
 ## Screenshots
