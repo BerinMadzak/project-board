@@ -131,9 +131,7 @@ jobs:
         run: server/node_modules/.bin/prisma generate --schema server/prisma/schema.prisma
 
       - name: Run migrations
-        run: server/node_modules/.bin/prisma migrate deploy --schema server/prisma/schema.prisma
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/project_board_test
+        run: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/project_board_test server/node_modules/.bin/prisma migrate deploy --schema server/prisma/schema.prisma
 
       - name: Run tests
         run: npm test --prefix server
