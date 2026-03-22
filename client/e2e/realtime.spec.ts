@@ -1,7 +1,8 @@
 import { test, expect, chromium } from "@playwright/test";
+import { Page } from "@playwright/test";
 
 test.describe("Real-time collaboration", () => {
-  async function loginAs(page: any, email: string) {
+  async function loginAs(page: Page, email: string) {
     await page.goto("http://localhost:5173/login");
     await page.getByPlaceholder("email@example.com").fill(email);
     await page.getByPlaceholder("••••••••").fill("password123");
@@ -9,7 +10,7 @@ test.describe("Real-time collaboration", () => {
     await expect(page).toHaveURL(/\/home/);
   }
 
-  async function createTask(page: any, title: string) {
+  async function createTask(page: Page, title: string) {
     await page.getByRole("button", { name: /add task/i }).click();
     await page.getByPlaceholder("New Task").fill(title);
     await page.getByRole("button", { name: /create task/i }).click();

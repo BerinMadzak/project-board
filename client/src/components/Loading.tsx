@@ -12,7 +12,7 @@ export default function Loading() {
         if (res.status === 200) {
           setServerReady(true);
         }
-      } catch (error) {
+      } catch (_error) {
         console.log("Server is still loading");
       }
     };

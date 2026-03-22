@@ -27,7 +27,7 @@ projectRouter.get("/", async (req: Request, res: Response) => {
     });
 
     return res.status(200).json(projects);
-  } catch (error) {
+  } catch (_error) {
     return res.status(500).json({ message: "Error fetching projects" });
   }
 });
@@ -135,7 +135,7 @@ projectRouter.delete("/:id", async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({ message: "Project deleted successfully" });
-  } catch (error) {
+  } catch (_error) {
     return res.status(500).json({ message: "Error deleting project" });
   }
 });
@@ -225,7 +225,7 @@ projectRouter.delete(
       return res
         .status(200)
         .json({ message: "Member removed successfully", userId });
-    } catch (error) {
+    } catch (_error) {
       return res.status(500).json({ message: "Error removing member" });
     }
   },

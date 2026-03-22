@@ -92,7 +92,7 @@ analyticsRouter.get(
         completionData,
         tasks: recentTasks,
       });
-    } catch (error) {
+    } catch (_error) {
       return res.status(500).json({ message: "Error fetching analytics" });
     }
   },

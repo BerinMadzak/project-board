@@ -67,7 +67,7 @@ authRouter.post(
           token,
           message: "User created successfully",
         });
-      } catch (error) {
+      } catch (_error) {
         return res.status(500).json({ message: "Error creating user" });
       }
     }
@@ -112,7 +112,7 @@ authRouter.post(
         };
 
         return res.status(200).json({ user: userData, token });
-      } catch (error) {
+      } catch (_error) {
         return res.status(500).json({ message: "Error logging in" });
       }
     }

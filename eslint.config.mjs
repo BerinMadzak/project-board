@@ -9,7 +9,11 @@ export default defineConfig([
     plugins: { prettier },
     rules: {
       "prettier/prettier": "error",
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { 
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      }],
       "@typescript-eslint/explicit-module-boundary-types": "off",
     },
   },
