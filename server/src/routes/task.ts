@@ -153,10 +153,10 @@ taskRouter.patch(
                 { members: { some: { userId: userId } } },
               ],
             },
-          }
+          },
         });
 
-        if(!task) {
+        if (!task) {
           return res.status(403).json({ message: "Forbidden" });
         }
 
@@ -167,7 +167,7 @@ taskRouter.patch(
             dueDate: req.body.dueDate ? new Date(req.body.dueDate) : null,
             assigneeId: req.body.assigneeId || null,
           },
-        })
+        });
         getIO().to(`project:${task.projectId}`).emit("task:updated", updated);
         return res.status(200).json(updated);
       } catch (error) {

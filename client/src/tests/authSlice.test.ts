@@ -68,11 +68,10 @@ describe("authSlice — login thunk", () => {
   it("sets user and token on fulfilled", () => {
     const state = authReducer(
       initialState,
-      login.fulfilled(
-        { user: mockUser, token: "abc123" },
-        "",
-        { email: "test@example.com", password: "password123" },
-      ),
+      login.fulfilled({ user: mockUser, token: "abc123" }, "", {
+        email: "test@example.com",
+        password: "password123",
+      }),
     );
     expect(state.user).toEqual(mockUser);
     expect(state.token).toBe("abc123");
@@ -83,7 +82,12 @@ describe("authSlice — login thunk", () => {
   it("sets error on rejected", () => {
     const state = authReducer(
       initialState,
-      login.rejected(null, "", { email: "", password: "" }, "Invalid credentials"),
+      login.rejected(
+        null,
+        "",
+        { email: "", password: "" },
+        "Invalid credentials",
+      ),
     );
     expect(state.error).toBe("Invalid credentials");
     expect(state.loading).toBe(false);
@@ -103,11 +107,11 @@ describe("authSlice — register thunk", () => {
   it("sets user and token on fulfilled", () => {
     const state = authReducer(
       initialState,
-      register.fulfilled(
-        { user: mockUser, token: "abc123" },
-        "",
-        { email: "test@example.com", password: "password123", username: "testuser" },
-      ),
+      register.fulfilled({ user: mockUser, token: "abc123" }, "", {
+        email: "test@example.com",
+        password: "password123",
+        username: "testuser",
+      }),
     );
     expect(state.isAuthenticated).toBe(true);
     expect(state.user).toEqual(mockUser);
@@ -116,7 +120,12 @@ describe("authSlice — register thunk", () => {
   it("sets error on rejected", () => {
     const state = authReducer(
       initialState,
-      register.rejected(null, "", { email: "", password: "", username: "" }, "Email already in use"),
+      register.rejected(
+        null,
+        "",
+        { email: "", password: "", username: "" },
+        "Email already in use",
+      ),
     );
     expect(state.error).toBe("Email already in use");
     expect(state.isAuthenticated).toBe(false);
@@ -156,5 +165,3 @@ describe("authSlice — validate thunk", () => {
     expect(state.error).toBe("Failed to validate token");
   });
 });
-
-

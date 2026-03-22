@@ -14,11 +14,13 @@ test.describe("Projects", () => {
     await expect(page.getByRole("heading", { name: "Projects" })).toBeVisible();
   });
 
- test("user can create a new project", async ({ page }) => {
+  test("user can create a new project", async ({ page }) => {
     await page.goto("/projects");
 
     await page.getByRole("button", { name: /new project/i }).click();
-    await page.getByPlaceholder("e.g. My Website Design").fill("E2E Test Project");
+    await page
+      .getByPlaceholder("e.g. My Website Design")
+      .fill("E2E Test Project");
     await page.getByRole("button", { name: /create project/i }).click();
 
     await expect(page.getByText("E2E Test Project")).toBeVisible();

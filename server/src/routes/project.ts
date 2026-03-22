@@ -93,7 +93,9 @@ projectRouter.put(
         const { name, description, color } = req.body;
         const userId = req.user!.id;
 
-        const project = await prisma.project.findUnique({ where: { id: id as string } });
+        const project = await prisma.project.findUnique({
+          where: { id: id as string },
+        });
 
         if (!project || project.ownerId !== userId) {
           return res.status(403).json({ message: "Forbidden" });

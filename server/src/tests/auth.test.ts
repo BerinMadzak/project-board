@@ -4,7 +4,7 @@ describe("POST /api/auth/register", () => {
   beforeAll(async () => {
     await clearDatabase();
   });
-  
+
   it("registers a new user and returns a token", async () => {
     const res = await api.post("/api/auth/register").send({
       email: `reg_${Date.now()}@test.com`,

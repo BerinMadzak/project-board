@@ -226,14 +226,16 @@ export default function ProjectDetails() {
         </div>
       </div>
 
-      <button 
+      <button
         onClick={() => setIsMemberPanelOpen(!isMemberPanelOpen)}
         className={`flex w-60 items-center justify-between rounded-md px-3 py-2 text-sm text-white transition-colors duration-200 
         cursor-pointer ${isMemberPanelOpen ? "bg-white/10 border-indigo-500" : "bg-white/5 border-white/10"} 
         mb-5 border focus:outline-none`}
-      >      
+      >
         <span>Team Members</span>
-        <span className={`transform transition-transform ${isMemberPanelOpen ? 'rotate-180' : 'rotate-0'}`}>
+        <span
+          className={`transform transition-transform ${isMemberPanelOpen ? "rotate-180" : "rotate-0"}`}
+        >
           ▼
         </span>
       </button>

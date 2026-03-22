@@ -52,7 +52,7 @@ test.describe("Authentication", () => {
     await page.getByRole("button", { name: /log out/i }).click();
 
     await expect(
-      page.getByRole("navigation").getByRole("button", { name: /log in/i })
+      page.getByRole("navigation").getByRole("button", { name: /log in/i }),
     ).toBeVisible();
   });
 });

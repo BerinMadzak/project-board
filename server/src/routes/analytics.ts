@@ -16,14 +16,11 @@ analyticsRouter.get(
       const project = await prisma.project.findFirst({
         where: {
           id: projectId as string,
-          OR: [
-            { ownerId: userId },
-            { members: { some: { userId: userId } } }
-          ]
-        }
+          OR: [{ ownerId: userId }, { members: { some: { userId: userId } } }],
+        },
       });
 
-      if(!project) {
+      if (!project) {
         return res.status(403).json({ message: "Forbidden" });
       }
 
@@ -78,10 +75,12 @@ analyticsRouter.get(
         });
         grouped[label] = (grouped[label] ?? 0) + 1;
       });
-      const completionData = Object.entries(grouped).map(([date, completed]) => ({
-        date,
-        completed,
-      }));
+      const completionData = Object.entries(grouped).map(
+        ([date, completed]) => ({
+          date,
+          completed,
+        }),
+      );
 
       return res.json({
         stats: {

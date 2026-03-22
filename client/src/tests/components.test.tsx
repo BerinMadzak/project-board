@@ -107,7 +107,9 @@ describe("PrivateRoute", () => {
 describe("Login page", () => {
   it("renders email and password fields", () => {
     renderWithProviders(<Login />);
-    expect(screen.getByPlaceholderText("email@example.com")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("email@example.com"),
+    ).toBeInTheDocument();
     expect(screen.getByPlaceholderText("••••••••")).toBeInTheDocument();
   });
 
@@ -197,7 +199,9 @@ describe("TaskCard", () => {
     const overdueTask = { ...mockTask, dueDate: yesterday };
 
     renderWithProviders(<TaskCard task={overdueTask} projectMembers={[]} />);
-    const dateEl = screen.getByText(/yesterday|today|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i);
+    const dateEl = screen.getByText(
+      /yesterday|today|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i,
+    );
     expect(dateEl.className).toContain("red");
   });
 

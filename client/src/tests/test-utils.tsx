@@ -10,33 +10,31 @@ import { MemoryRouter } from "react-router-dom";
 import { render } from "@testing-library/react";
 
 export function renderWithProviders(
-    ui: ReactElement,
-    {
-        preloadedState = {},
-        initialEntries = ["/"],
-    }: {
-        preloadedState?: Partial<RootState>;
-        initialEntries?: string[];
-    } = {}
+  ui: ReactElement,
+  {
+    preloadedState = {},
+    initialEntries = ["/"],
+  }: {
+    preloadedState?: Partial<RootState>;
+    initialEntries?: string[];
+  } = {},
 ) {
-    const store = configureStore({
-        reducer: {
-            auth: authReducer,
-            projects: projectReducer,
-            tasks: taskReducer,
-            analytics: analyticsReducer
-        },
-        preloadedState: preloadedState as RootState
-    });
+  const store = configureStore({
+    reducer: {
+      auth: authReducer,
+      projects: projectReducer,
+      tasks: taskReducer,
+      analytics: analyticsReducer,
+    },
+    preloadedState: preloadedState as RootState,
+  });
 
-    return {
-        ...render(
-            <Provider store={store}>
-                <MemoryRouter initialEntries={initialEntries}>
-                    {ui}
-                </MemoryRouter>
-            </Provider>
-        ),
-        store
-    };
+  return {
+    ...render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={initialEntries}>{ui}</MemoryRouter>
+      </Provider>,
+    ),
+    store,
+  };
 }

@@ -66,14 +66,21 @@ test.describe("Real-time collaboration", () => {
     const taskTitle = `Delete Test ${Date.now()}`;
     await createTask(alicePage, taskTitle);
 
-    await expect(alicePage.getByText(taskTitle)).toBeVisible({ timeout: 10000 });
+    await expect(alicePage.getByText(taskTitle)).toBeVisible({
+      timeout: 10000,
+    });
     await expect(bobPage.getByText(taskTitle)).toBeVisible({ timeout: 10000 });
 
     await alicePage.getByText(taskTitle).hover();
-    await alicePage.locator(".group").filter({ hasText: taskTitle })
-      .getByRole("button", { name: /delete/i }).click();
+    await alicePage
+      .locator(".group")
+      .filter({ hasText: taskTitle })
+      .getByRole("button", { name: /delete/i })
+      .click();
 
-    await expect(bobPage.getByText(taskTitle)).not.toBeVisible({ timeout: 10000 });
+    await expect(bobPage.getByText(taskTitle)).not.toBeVisible({
+      timeout: 10000,
+    });
 
     await aliceContext.close();
     await bobContext.close();
