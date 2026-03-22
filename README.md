@@ -1,5 +1,7 @@
 # ProjectBoard
 
+![CI](https://github.com/BerinMadzak/project-board/actions/workflows/ci.yml/badge.svg)
+
 You can try the project here: https://project-board-woad.vercel.app (might have to wait about a minute for the server to start)
 
 A full-stack project management app built with **React**, **TypeScript**, **Node.js** and **PostgreSQL**. Organise work across multiple projects using a drag-and-drop Kanban board, collaborate with teammates in real time, and track progress through an analytics dashboard.
