@@ -79,3 +79,21 @@ jobs:
 
       - name: Run TypeScript check
         run: ${{ matrix.workspace }}/node_modules/.bin/tsc --noEmit --project ${{ matrix.workspace }}/tsconfig.json
+  test-frontend:
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install client dependencies
+        run: npm ci --prefix client
+
+      - name: Run tests
+        run: npm test --prefix client -- --coverage --reporter=verbose
