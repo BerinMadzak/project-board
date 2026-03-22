@@ -128,10 +128,12 @@ jobs:
         run: npm ci --prefix server
 
       - name: Generate Prisma client
-        run: server/node_modules/.bin/prisma generate --schema server/prisma/schema.prisma
+        working-directory: server
+        run: node_modules/.bin/prisma generate
 
       - name: Run migrations
-        run: server/node_modules/.bin/prisma migrate deploy
+        working-directory: server
+        run: node_modules/.bin/prisma migrate deploy
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/project_board_test
 
