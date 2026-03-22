@@ -74,4 +74,4 @@ jobs:
         run: npm ci --prefix ${{ matrix.workspace }}
 
       - name: Run TypeScript check
-        run: npx tsc --noEmit --project ${{ matrix.workspace }}/tsconfig.json
+        run: ${{ matrix.workspace }}/node_modules/.bin/tsc --noEmit --project ${{ matrix.workspace }}/tsconfig.json
