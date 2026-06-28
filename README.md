@@ -95,7 +95,7 @@ npx playwright test --ui          # open Playwright UI
 
 ```bash
 git clone https://github.com/your-username/board-manager.git
-cd project-board
+cd board-manager
 ```
 
 ### 2. Install Dependencies
