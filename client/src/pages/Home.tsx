@@ -19,7 +19,7 @@ export default function Home() {
             src="logo.png"
             className="mx-auto h-8 w-auto"
           />
-          project-board
+          Board Manager
         </span>
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
@@ -66,7 +66,7 @@ export default function Home() {
         </div>
 
         <h1 className="text-5xl font-bold text-white tracking-tight max-w-xl leading-tight mb-5">
-          Get things done, <span className="text-indigo-400">together</span>
+          <span className="text-indigo-400">Board Manager</span>
         </h1>
 
         <p className="text-gray-400 text-lg max-w-md mb-10">

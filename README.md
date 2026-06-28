@@ -1,6 +1,6 @@
-# ProjectBoard
+# Board Manager
 
-![CI](https://github.com/BerinMadzak/project-board/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/BerinMadzak/board-manager/actions/workflows/ci.yml/badge.svg)
 
 You can try the project here: https://project-board-woad.vercel.app (might have to wait about a minute for the server to start)
 
@@ -94,7 +94,7 @@ npx playwright test --ui          # open Playwright UI
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/project-board.git
+git clone https://github.com/your-username/board-manager.git
 cd project-board
 ```
 

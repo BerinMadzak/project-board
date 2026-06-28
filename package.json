@@ -1,5 +1,5 @@
 {
-  "name": "project-board",
+  "name": "board-manager",
   "version": "1.0.0",
   "description": "Full-stack project board web application built with React, Node.js, and PostgreSQL.",
   "main": "index.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BerinMadzak/project-board.git"
+    "url": "git+https://github.com/BerinMadzak/board-manager.git"
   },
   "author": "Berin Madžak",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BerinMadzak/project-board/issues"
+    "url": "https://github.com/BerinMadzak/board-manager/issues"
   },
-  "homepage": "https://github.com/BerinMadzak/project-board#readme",
+  "homepage": "https://github.com/BerinMadzak/board-manager#readme",
   "devDependencies": {
     "concurrently": "^9.2.1",
     "eslint": "^9.39.2",
