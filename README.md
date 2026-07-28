@@ -94,7 +94,7 @@ npx playwright test --ui          # open Playwright UI
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/board-manager.git
+git clone https://github.com/berinmadzak/board-manager.git
 cd board-manager
 ```
 
@@ -156,6 +156,33 @@ Populates the database with two projects, realistic tasks spread across the past
 # From server/
 cd server
 npx ts-node src/db/seed.ts
+```
+
+## Running with Docker
+
+### Prerequisites
+
+- **Docker** and **Docker Compose**
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/berinmadzak/board-manager.git
+cd board-manager
+```
+
+### 2. Start the App
+
+```bash
+docker-compose up --build
+```
+
+The app will be available at `http://localhost`. The database migrations run automatically on startup.
+
+### 3. Seed Demo Data (optional)
+
+```bash
+docker exec -it project-board-server-1 npx ts-node src/db/seed.ts
 ```
 
 Demo accounts (password: `password123`):
