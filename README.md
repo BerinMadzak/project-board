@@ -158,6 +158,14 @@ cd server
 npx ts-node src/db/seed.ts
 ```
 
+Demo accounts (password: `password123`):
+
+```
+alice@example.com  — owns Website Redesign project
+bob@example.com    — owns Mobile App MVP project
+carol@example.com  — member on both projects
+```
+
 ## Running with Docker
 
 ### Prerequisites
